@@ -49,7 +49,7 @@
 #adBottomBar{position:absolute;bottom:0;left:0;right:0;z-index:10001;pointer-events:none}
 #adProgLine{height:4px;background:rgba(255,255,255,.15)}
 #adProgFill{height:100%;background:linear-gradient(90deg,var(--p),var(--pl));width:0%;transition:width .9s linear}
-#adClaimBtn{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:10002;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:50px;padding:16px 44px;font-size:16px;font-weight:800;font-family:'Outfit',sans-serif;cursor:pointer;box-shadow:0 0 30px var(--pglow),0 8px 24px rgba(0,0,0,.5);display:none;animation:popIn .4s ease}
+#adClaimBtn{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:10002;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:50px;padding:16px 44px;font-size:16px;font-weight:800;font-family:'Outfit',sans-serif;cursor:pointer;box-shadow:0 0 30px var(--pglow),0 8px 24px rgba(0,0,0,.5);display:none;animation:popIn .4s ease;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}#adClaimBtn:disabled{opacity:0.6;cursor:not-allowed}#adClaimBtn:not(:disabled):active{transform:translateX(-50%) scale(0.95)}
 @keyframes popIn{from{transform:translateX(-50%) scale(.7);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
 #adNoUrl{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);z-index:10003;text-align:center;padding:30px}
 
@@ -367,17 +367,19 @@ function openAd(type, taskId, reward) {
   const adUrl = pickAdUrl();
   const frame = document.getElementById('adFrame');
   const noUrl = document.getElementById('adNoUrl');
+  
+  document.getElementById('adViewer').style.display = 'flex';
+  
   if (adUrl) {
-    frame.src = adUrl;
+    frame.src = '';
     frame.style.display = 'block';
     noUrl.style.display = 'none';
+    frame.src = adUrl;
   } else {
     frame.src = 'about:blank';
     frame.style.display = 'none';
     noUrl.style.display = 'flex';
   }
-
-  document.getElementById('adViewer').style.display = 'flex';
 
   let rem = AD_DURATION;
   adTimer = setInterval(async () => {
@@ -396,17 +398,39 @@ function openAd(type, taskId, reward) {
   }, 1000);
 }
 
-document.getElementById('adClaimBtn').addEventListener('click', async () => {
-  if (!adDone) return;
-  await giveReward();
-  closeAd();
-  showRewardPop(currentReward);
-});
+document.getElementById('adClaimBtn').addEventListener('click', async (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (!adDone || !currentReward) return;
+  document.getElementById('adClaimBtn').disabled = true;
+  try {
+    await giveReward();
+    closeAd();
+    showRewardPop(currentReward);
+  } catch (err) {
+    console.error('Claim error:', err);
+    toast('Error claiming reward','err');
+  } finally {
+    document.getElementById('adClaimBtn').disabled = false;
+  }
+}, { capture: true });
 
 async function giveReward() {
   const r = currentReward;
+  if (!r || r <= 0) throw new Error('Invalid reward');
+  
   if (pendingType === 'ad') {
-    await updateDoc(doc(db,'users',uid),{balance:increment(r),totalEarned:increment(r),adsWatched:increment(1)});
+    const userRef = doc(db,'users',uid);
+    await updateDoc(userRef,{
+      balance: increment(r),
+      totalEarned: increment(r),
+      adsWatched: increment(1),
+      lastAdClaimTime: new Date()
+    }).catch(err => {
+      console.error('Firebase update error:', err);
+      throw err;
+    });
+    
     const newCount = getAdCountToday() + 1;
     setAdCountToday(newCount);
     userData.balance = (userData.balance||0) + r;
@@ -420,9 +444,22 @@ async function giveReward() {
     }
     toast(`+৳${r} Ad reward! 📺`, 'ok');
   } else if (pendingType === 'task' && currentTaskId) {
-    const fresh = (await getDoc(doc(db,'users',uid))).data();
-    if ((fresh.claimedTasks||[]).includes(currentTaskId)) { toast('Already claimed!','warn'); return; }
-    await updateDoc(doc(db,'users',uid),{balance:increment(r),totalEarned:increment(r),claimedTasks:arrayUnion(currentTaskId)});
+    const userRef = doc(db,'users',uid);
+    const fresh = (await getDoc(userRef)).data();
+    if ((fresh.claimedTasks||[]).includes(currentTaskId)) { 
+      toast('Already claimed!','warn'); 
+      return; 
+    }
+    await updateDoc(userRef,{
+      balance: increment(r),
+      totalEarned: increment(r),
+      claimedTasks: arrayUnion(currentTaskId),
+      lastTaskClaimTime: new Date()
+    }).catch(err => {
+      console.error('Firebase update error:', err);
+      throw err;
+    });
+    
     userData.balance = (userData.balance||0) + r;
     userData.claimedTasks = [...(userData.claimedTasks||[]),currentTaskId];
     document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
