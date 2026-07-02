@@ -36,50 +36,54 @@
 .tc-steps{font-size:10px;color:var(--t3)}
 
 /* ════════════════════════════════════════════════════════
-   NEW: AD WATCH OVERLAY (NO IFRAME - FAST & RELIABLE)
+   ADSTERRA-STYLE AD WATCH SYSTEM
    ════════════════════════════════════════════════════════ */
-#adWatchOverlay{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#1a0a2e,#0d0221);display:none;flex-direction:column;align-items:center;justify-content:center}
-#adWatchOverlay .aw-top{position:absolute;top:0;left:0;right:0;background:linear-gradient(135deg,rgba(124,58,237,.92),rgba(168,85,247,.85));backdrop-filter:blur(8px);padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
-#adWatchOverlay .aw-top .aw-left{font-size:13px;font-weight:700;color:#fff}
-#adWatchOverlay .aw-top .aw-right{font-size:15px;font-weight:900;color:var(--gold2)}
 
-#adWatchOverlay .aw-center{text-align:center;padding:20px}
-#adWatchOverlay .aw-ico{font-size:64px;margin-bottom:16px;animation:pulse 1.5s ease infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-#adWatchOverlay .aw-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px}
-#adWatchOverlay .aw-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:24px;line-height:1.5}
+/* Modal backdrop */
+#adModal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+#adModal.open{display:flex}
 
-/* Big countdown */
-#adWatchOverlay .aw-timer-wrap{position:relative;width:140px;height:140px;margin:0 auto 24px}
-#adWatchOverlay .aw-timer-ring{transform:rotate(-90deg)}
-#adWatchOverlay .aw-timer-bg{stroke:rgba(255,255,255,.1);stroke-width:6;fill:none}
-#adWatchOverlay .aw-timer-fill{stroke:var(--pl);stroke-width:6;fill:none;stroke-linecap:round;transition:stroke-dashoffset .9s linear}
-#adWatchOverlay .aw-timer-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:42px;font-weight:900;color:#fff;font-family:'Outfit',monospace}
+/* Bottom sheet */
+.ad-sheet{background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 30px;width:100%;max-width:420px;margin:0 auto;animation:slideUp .35s ease;position:relative}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 
-/* Progress bar */
-#adWatchOverlay .aw-progress{width:80%;max-width:300px;height:6px;background:rgba(255,255,255,.1);border-radius:3px;margin-bottom:20px;overflow:hidden}
-#adWatchOverlay .aw-progress-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--pl));width:0%;transition:width .9s linear}
+.ad-sheet .ad-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 16px}
 
-/* Open Ad button */
-#adWatchOverlay .aw-open-btn{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:50px;padding:16px 40px;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 0 30px var(--pglow),0 8px 24px rgba(0,0,0,.5);margin-bottom:12px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;animation:popIn .4s ease}
-#adWatchOverlay .aw-open-btn:active{transform:scale(.93)}
-#adWatchOverlay .aw-open-btn:disabled{opacity:.5;cursor:not-allowed}
+.ad-sheet .ad-lock{text-align:center;margin-bottom:16px}
+.ad-sheet .ad-lock-ico{font-size:40px;margin-bottom:8px}
+.ad-sheet .ad-lock-title{font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:4px}
+.ad-sheet .ad-lock-sub{font-size:13px;color:#666}
 
-/* Already Opened text */
-#adWatchOverlay .aw-opened-msg{font-size:12px;color:rgba(255,255,255,.5);display:none}
+/* Progress */
+.ad-progress-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:12px 16px;background:#f8f9fa;border-radius:12px}
+.ad-progress-label{font-size:14px;font-weight:600;color:#333}
+.ad-progress-count{font-size:20px;font-weight:800;color:var(--p)}
+.ad-progress-count span{font-size:14px;color:#999;font-weight:500}
 
-/* Claim button */
-#adWatchOverlay .aw-claim-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:50px;padding:18px 48px;font-size:17px;font-weight:800;cursor:pointer;box-shadow:0 0 30px rgba(16,185,129,.4),0 8px 24px rgba(0,0,0,.5);display:none;animation:popIn .4s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;min-width:220px}
-#adWatchOverlay .aw-claim-btn:active{transform:scale(.93)}
+/* Timer display */
+.ad-timer-box{text-align:center;margin-bottom:16px;padding:16px;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(168,85,247,.05));border-radius:16px;border:1px solid rgba(124,58,237,.15)}
+.ad-timer-box .ad-timer-num{font-size:36px;font-weight:900;color:var(--pu);font-family:'Outfit',monospace}
+.ad-timer-box .ad-timer-lbl{font-size:12px;color:#888;margin-top:4px}
 
-/* Bottom bar */
-#adWatchOverlay .aw-bottom{position:absolute;bottom:0;left:0;right:0;padding:12px 16px;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between}
-#adWatchOverlay .aw-bottom .aw-b-left{font-size:11px;color:rgba(255,255,255,.5)}
-#adWatchOverlay .aw-bottom .aw-b-right{font-size:11px;color:var(--pu);font-weight:700}
+/* Main action button */
+.ad-action-btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;transition:all .2s;margin-bottom:12px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.ad-action-btn:active{transform:scale(.97)}
 
-/* Cancel button */
-#adWatchOverlay .aw-cancel{position:absolute;top:14px;left:16px;z-index:10002;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
-#adWatchOverlay .aw-cancel:active{background:rgba(255,255,255,.2)}
+.ad-action-btn.primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 16px rgba(16,185,129,.3)}
+.ad-action-btn.primary:disabled{opacity:.6;cursor:not-allowed}
+
+.ad-action-btn.secondary{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;box-shadow:0 4px 16px var(--pglow)}
+
+/* Warning text */
+.ad-warning{text-align:center;font-size:12px;color:#e74c3c;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px}
+.ad-warning.hidden{display:none}
+
+.ad-powered{text-align:center;font-size:11px;color:#aaa}
+
+/* Status texts */
+.ad-status-waiting{color:#666}
+.ad-status-running{color:var(--pu)}
+.ad-status-done{color:#10b981}
 
 /* REWARD POP */
 .reward-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10010;background:linear-gradient(135deg,var(--p),var(--pl));border-radius:24px;padding:28px 36px;text-align:center;display:none;animation:popIn .4s ease;box-shadow:0 0 60px var(--pglow)}
@@ -223,46 +227,42 @@
 </div>
 
 <!-- ════════════════════════════════════════════════════════
-     NEW: AD WATCH OVERLAY (NO IFRAME - OPENS IN NEW TAB)
+     ADSTERRA-STYLE AD MODAL (Bottom Sheet)
      ════════════════════════════════════════════════════════ -->
-<div id="adWatchOverlay">
-  <button class="aw-cancel" id="awCancel">✕</button>
+<div id="adModal">
+  <div class="ad-sheet">
+    <div class="ad-handle"></div>
 
-  <div class="aw-top">
-    <div class="aw-left">📺 Watch to earn</div>
-    <div class="aw-right">+৳<span id="awReward">1</span></div>
-  </div>
-
-  <div class="aw-center">
-    <div class="aw-ico">📺</div>
-    <div class="aw-title" id="awTitle">Watch Ad & Earn</div>
-    <div class="aw-sub" id="awSub">Click the button below to open the ad.<br>Keep it open for 15 seconds, then come back to claim!</div>
-
-    <!-- Timer Ring -->
-    <div class="aw-timer-wrap" id="awTimerWrap">
-      <svg class="aw-timer-ring" width="140" height="140" viewBox="0 0 140 140">
-        <circle class="aw-timer-bg" cx="70" cy="70" r="60"/>
-        <circle class="aw-timer-fill" id="awTimerFill" cx="70" cy="70" r="60" stroke-dasharray="377" stroke-dashoffset="0"/>
-      </svg>
-      <div class="aw-timer-num" id="awTimerNum">15</div>
+    <div class="ad-lock">
+      <div class="ad-lock-ico">🔒</div>
+      <div class="ad-lock-title">Complete Ad To Earn</div>
+      <div class="ad-lock-sub">Watch the full ad to unlock your reward</div>
     </div>
 
-    <!-- Progress bar -->
-    <div class="aw-progress">
-      <div class="aw-progress-fill" id="awProgressFill"></div>
+    <!-- Progress -->
+    <div class="ad-progress-row">
+      <div class="ad-progress-label">Progress</div>
+      <div class="ad-progress-count"><span id="adProgressNum">0</span><span> / <span id="adProgressTotal">1</span></span></div>
     </div>
 
-    <!-- Open Ad Button -->
-    <button class="aw-open-btn" id="awOpenBtn">🚀 Open Ad Now</button>
-    <div class="aw-opened-msg" id="awOpenedMsg">✅ Ad opened! Timer is running...</div>
+    <!-- Timer -->
+    <div class="ad-timer-box">
+      <div class="ad-timer-num" id="adTimerNum">15</div>
+      <div class="ad-timer-lbl" id="adTimerLbl">seconds remaining</div>
+    </div>
 
-    <!-- Claim Button -->
-    <button class="aw-claim-btn" id="awClaimBtn">✅ Claim ৳<span id="awClaimAmt">1</span></button>
-  </div>
+    <!-- Action Button -->
+    <button class="ad-action-btn primary" id="adActionBtn">
+      <span>▶</span> <span id="adActionText">Open Ad Now</span>
+    </button>
 
-  <div class="aw-bottom">
-    <div class="aw-b-left">Don't close this screen</div>
-    <div class="aw-b-right" id="awStatus">Waiting...</div>
+    <!-- Warning -->
+    <div class="ad-warning" id="adWarning">
+      <span>⚠️</span>
+      <span id="adWarningText">Stay on the ad for 15s, then come back</span>
+    </div>
+
+    <div class="ad-powered">Powered by Adsterra</div>
   </div>
 </div>
 
@@ -300,7 +300,6 @@ import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/f
 import { toast, copyText, refCode, openModal, getSettings } from './assets/js/app.js';
 
 const AD_DURATION = 15;
-const CIRC = 2 * Math.PI * 60; // radius 60
 const MAX_ADS = 5;
 
 let uid = null;
@@ -308,13 +307,14 @@ let userData = null;
 let cfg = {};
 let adTimer = null;
 let adDone = false;
-let adOpened = false;
+let adWindow = null;
+let adTabCheckInterval = null;
 let pendingType = null;
 let currentTaskId = null;
 let currentReward = 0;
 let isClaiming = false;
-let adWindow = null;
-let currentAdUrl = null;
+let remainingTime = AD_DURATION;
+let isAdOpen = false;
 
 window.showToastMsg = msg => toast(msg, 'info');
 
@@ -325,7 +325,6 @@ onAuthStateChanged(auth, async user => {
   if (!user) { location.replace('login.html'); return; }
 
   uid = user.uid;
-  console.log('[Earn] User:', uid);
 
   try {
     const [usnap, settings] = await Promise.all([
@@ -338,16 +337,12 @@ onAuthStateChanged(auth, async user => {
     if (userData.isBanned) { location.replace('login.html'); return; }
     cfg = settings || {};
 
-    // UI
     document.getElementById('tbBal').textContent = parseFloat(userData.balance || 0).toFixed(2);
     document.getElementById('adRwdLbl').textContent = cfg.adReward || 1;
     document.getElementById('adMaxLbl').textContent = ((cfg.adReward || 1) * MAX_ADS).toFixed(0);
     document.getElementById('dailyLbl').textContent = cfg.dailyBonus || 2;
     document.getElementById('refBonusLbl').textContent = cfg.referralBonus || 5;
-    document.getElementById('awReward').textContent = cfg.adReward || 1;
-    document.getElementById('awClaimAmt').textContent = cfg.adReward || 1;
 
-    // Ref link
     const refUrl = location.origin + '/register.html?ref=' + (userData.referralCode || refCode(uid));
     document.getElementById('refLink').value = refUrl;
     document.getElementById('copyRefBtn').onclick = () => copyText(refUrl, document.getElementById('copyRefBtn'));
@@ -384,18 +379,13 @@ async function getAdCountToday() {
       return 0;
     }
     return data.adsToday || 0;
-  } catch (e) {
-    console.error('[AdCount] Error:', e);
-    return 0;
-  }
+  } catch (e) { return 0; }
 }
 
 async function setAdCountToday(count) {
   try {
     await updateDoc(doc(db, 'users', uid), { adsToday: count, lastAdDate: serverTimestamp() });
-  } catch (e) {
-    console.error('[AdCount] Set error:', e);
-  }
+  } catch (e) { console.error(e); }
 }
 
 async function initAdLimit() {
@@ -428,156 +418,205 @@ function pickAdUrl() {
     cfg.adUrl1, cfg.adUrl2, cfg.adUrl3
   ].filter(u => u && typeof u === 'string' && u.trim().startsWith('http'));
 
-  if (!urls.length) {
-    // Default fallback URLs if none configured
-    const fallbacks = [
-      'https://google.com',
-      'https://youtube.com',
-      'https://facebook.com'
-    ];
-    return fallbacks[Math.floor(Math.random() * fallbacks.length)];
-  }
+  if (!urls.length) return 'https://google.com';
   return urls[Math.floor(Math.random() * urls.length)];
 }
 
 // ════════════════════════════════════════════════════
-// NEW: OPEN AD IN NEW TAB (NO IFRAME)
+// AD MODAL SYSTEM (Adsterra Style)
 // ════════════════════════════════════════════════════
-function openAdWatch(type, taskId, reward) {
+const adModal = document.getElementById('adModal');
+const adActionBtn = document.getElementById('adActionBtn');
+const adTimerNum = document.getElementById('adTimerNum');
+const adTimerLbl = document.getElementById('adTimerLbl');
+const adActionText = document.getElementById('adActionText');
+const adWarning = document.getElementById('adWarning');
+const adWarningText = document.getElementById('adWarningText');
+const adProgressNum = document.getElementById('adProgressNum');
+
+function openAdModal(type, taskId, reward) {
   pendingType = type;
   currentTaskId = taskId || null;
   currentReward = parseFloat(reward) || (parseFloat(cfg.adReward) || 1);
   adDone = false;
-  adOpened = false;
   isClaiming = false;
-  currentAdUrl = pickAdUrl();
-
-  // Show overlay
-  const overlay = document.getElementById('adWatchOverlay');
-  overlay.style.display = 'flex';
+  remainingTime = AD_DURATION;
+  isAdOpen = false;
 
   // Reset UI
-  document.getElementById('awReward').textContent = currentReward;
-  document.getElementById('awClaimAmt').textContent = currentReward;
-  document.getElementById('awTimerNum').textContent = AD_DURATION;
-  document.getElementById('awTimerFill').style.strokeDashoffset = '0';
-  document.getElementById('awProgressFill').style.width = '0%';
-  document.getElementById('awOpenBtn').style.display = 'block';
-  document.getElementById('awOpenBtn').disabled = false;
-  document.getElementById('awOpenBtn').textContent = '🚀 Open Ad Now';
-  document.getElementById('awOpenedMsg').style.display = 'none';
-  document.getElementById('awClaimBtn').style.display = 'none';
-  document.getElementById('awStatus').textContent = 'Click "Open Ad Now"';
-  document.getElementById('awTitle').textContent = 'Watch Ad & Earn';
-  document.getElementById('awSub').innerHTML = 'Click the button below to open the ad.<br>Keep it open for 15 seconds, then come back to claim!';
+  adProgressNum.textContent = '0';
+  document.getElementById('adProgressTotal').textContent = '1';
+  adTimerNum.textContent = AD_DURATION;
+  adTimerNum.style.color = 'var(--pu)';
+  adTimerLbl.textContent = 'seconds remaining';
+  adActionBtn.className = 'ad-action-btn primary';
+  adActionBtn.disabled = false;
+  adActionText.textContent = 'Open Ad Now';
+  adWarning.classList.remove('hidden');
+  adWarningText.textContent = 'Stay on the ad for 15s, then come back';
 
-  // Start countdown immediately (runs even before clicking open)
-  let rem = AD_DURATION;
+  // Show modal
+  adModal.classList.add('open');
+}
+
+function closeAdModal() {
+  adModal.classList.remove('open');
+  clearInterval(adTimer);
+  adTimer = null;
+  clearInterval(adTabCheckInterval);
+  adTabCheckInterval = null;
+  adDone = false;
+  isAdOpen = false;
+  remainingTime = AD_DURATION;
+
+  // Reset button
+  adActionBtn.className = 'ad-action-btn primary';
+  adActionBtn.disabled = false;
+  adActionText.textContent = 'Open Ad Now';
+}
+
+// Action button click
+adActionBtn.addEventListener('click', handleActionBtn);
+adActionBtn.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  adActionBtn.style.transform = 'scale(0.97)';
+}, { passive: false });
+adActionBtn.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  adActionBtn.style.transform = 'scale(1)';
+  handleActionBtn(e);
+}, { passive: false });
+
+function handleActionBtn(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+
+  if (adDone) {
+    // Claim reward
+    claimReward();
+    return;
+  }
+
+  if (isAdOpen) return; // Already open
+
+  const adUrl = pickAdUrl();
+  adWindow = window.open(adUrl, '_blank');
+
+  if (!adWindow || adWindow.closed) {
+    toast('Popup blocked! Allow popups for this site.', 'warn');
+    return;
+  }
+
+  isAdOpen = true;
+
+  // Update UI to "Ad Opened" state
+  adActionBtn.disabled = true;
+  adActionText.textContent = 'Ad Opened...';
+  adWarningText.textContent = 'Stay on the ad! Timer pauses if you leave early.';
+
+  // Start countdown
+  startAdTimer();
+
+  // Monitor tab focus
+  adTabCheckInterval = setInterval(() => {
+    checkTabStatus();
+  }, 500);
+}
+
+function startAdTimer() {
   adTimer = setInterval(() => {
-    rem--;
-    const pct = (AD_DURATION - rem) / AD_DURATION;
-    document.getElementById('awProgressFill').style.width = (pct * 100) + '%';
-    document.getElementById('awTimerFill').style.strokeDashoffset = String(CIRC * (1 - pct));
-    document.getElementById('awTimerNum').textContent = rem;
+    // Only count down if ad tab is open and focused
+    if (!isAdOpen) return;
 
-    if (rem <= 0) {
+    remainingTime--;
+    adTimerNum.textContent = remainingTime;
+
+    if (remainingTime <= 0) {
       clearInterval(adTimer);
       adTimer = null;
+      clearInterval(adTabCheckInterval);
+      adTabCheckInterval = null;
+
       adDone = true;
-      document.getElementById('awTimerNum').textContent = '✓';
-      document.getElementById('awStatus').textContent = 'Ready to claim!';
-      document.getElementById('awTitle').textContent = 'Ad Watched!';
-      document.getElementById('awSub').textContent = 'Great job! Click the Claim button below.';
-      document.getElementById('awOpenBtn').style.display = 'none';
-      document.getElementById('awClaimBtn').style.display = 'block';
+      isAdOpen = false;
+
+      // Update UI to "Done" state
+      adTimerNum.textContent = '✓';
+      adTimerNum.style.color = '#10b981';
+      adTimerLbl.textContent = 'Completed!';
+
+      adActionBtn.className = 'ad-action-btn secondary';
+      adActionBtn.disabled = false;
+      adActionText.textContent = '✅ Claim ৳' + currentReward;
+
+      adWarning.classList.add('hidden');
+      adProgressNum.textContent = '1';
+
+      // Auto-close ad tab if still open
+      try {
+        if (adWindow && !adWindow.closed) adWindow.close();
+      } catch (e) {}
+
+      toast('🎉 Ad completed! Click Claim to get reward.', 'ok');
     }
   }, 1000);
 }
 
-// Open Ad button - opens in new tab
-const awOpenBtn = document.getElementById('awOpenBtn');
-awOpenBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-
-  if (!currentAdUrl) {
-    toast('No ad URL available!', 'err');
-    return;
+function checkTabStatus() {
+  try {
+    // Check if ad tab is still open
+    if (adWindow && adWindow.closed) {
+      // User closed the ad tab
+      if (!adDone && remainingTime > 0) {
+        // Pause timer
+        isAdOpen = false;
+        adActionBtn.disabled = false;
+        adActionText.textContent = '▶ Resume Ad';
+        adWarningText.textContent = `You left early! ${remainingTime}s remaining. Click to continue.`;
+        adTimerNum.style.color = '#e74c3c';
+        adTimerLbl.textContent = 'paused - click to resume';
+      }
+    }
+  } catch (e) {
+    // Cross-origin, can't check
   }
-
-  // Open ad in new tab
-  adWindow = window.open(currentAdUrl, '_blank');
-  adOpened = true;
-
-  // Update UI
-  awOpenBtn.disabled = true;
-  awOpenBtn.textContent = '✅ Ad Opened';
-  document.getElementById('awOpenedMsg').style.display = 'block';
-  document.getElementById('awStatus').textContent = 'Timer running...';
-
-  // Check if popup was blocked
-  if (!adWindow || adWindow.closed || typeof adWindow.closed === 'undefined') {
-    toast('Popup blocked! Please allow popups for this site.', 'warn');
-    awOpenBtn.disabled = false;
-    awOpenBtn.textContent = '🚀 Try Again';
-    document.getElementById('awOpenedMsg').style.display = 'none';
-  }
-});
-
-// Also handle touch for mobile
-awOpenBtn.addEventListener('touchstart', (e) => {
-  e.preventDefault();
-  awOpenBtn.style.transform = 'scale(0.95)';
-}, { passive: false });
-
-awOpenBtn.addEventListener('touchend', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  awOpenBtn.style.transform = 'scale(1)';
-  awOpenBtn.click();
-}, { passive: false });
-
-// ════════════════════════════════════════════════════
-// CLAIM HANDLER - WORKS ON ALL DEVICES
-// ════════════════════════════════════════════════════
-const awClaimBtn = document.getElementById('awClaimBtn');
-
-function handleClaim(e) {
-  if (e) { e.preventDefault(); e.stopPropagation(); }
-  if (!adDone || isClaiming) return;
-  isClaiming = true;
-
-  awClaimBtn.style.opacity = '0.6';
-  awClaimBtn.textContent = '⏳ Processing...';
-
-  giveReward()
-    .then(() => {
-      closeAdWatch();
-      showRewardPop(currentReward);
-    })
-    .catch(err => {
-      console.error('Claim error:', err);
-      isClaiming = false;
-      awClaimBtn.style.opacity = '1';
-      awClaimBtn.textContent = '✅ Claim ৳' + currentReward;
-      toast('Claim failed: ' + (err.message || 'Try again'), 'err');
-    });
 }
 
-awClaimBtn.addEventListener('click', handleClaim);
-awClaimBtn.addEventListener('touchstart', (e) => {
-  e.preventDefault();
-  awClaimBtn.style.transform = 'scale(0.93)';
-}, { passive: false });
-awClaimBtn.addEventListener('touchend', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  awClaimBtn.style.transform = 'scale(1)';
-  handleClaim(null);
-}, { passive: false });
-awClaimBtn.addEventListener('touchcancel', () => {
-  awClaimBtn.style.transform = 'scale(1)';
+// Also check when user comes back to this tab
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && isAdOpen && !adDone) {
+    // User came back to our tab while ad is supposed to be open
+    // Check if ad tab is still there
+    try {
+      if (adWindow && adWindow.closed && remainingTime > 0) {
+        isAdOpen = false;
+        adActionBtn.disabled = false;
+        adActionText.textContent = '▶ Resume Ad';
+        adWarningText.textContent = `You left early! ${remainingTime}s remaining. Click to continue.`;
+      }
+    } catch (e) {}
+  }
 });
+
+async function claimReward() {
+  if (isClaiming) return;
+  isClaiming = true;
+
+  adActionBtn.disabled = true;
+  adActionText.textContent = '⏳ Processing...';
+
+  try {
+    await giveReward();
+    closeAdModal();
+    showRewardPop(currentReward);
+  } catch (err) {
+    console.error('Claim error:', err);
+    isClaiming = false;
+    adActionBtn.disabled = false;
+    adActionText.textContent = '✅ Claim ৳' + currentReward;
+    toast('Claim failed: ' + (err.message || 'Try again'), 'err');
+  }
+}
 
 // ════════════════════════════════════════════════════
 // GIVE REWARD
@@ -648,32 +687,6 @@ async function giveReward() {
   }
 }
 
-function closeAdWatch() {
-  clearInterval(adTimer);
-  adTimer = null;
-  isClaiming = false;
-  adOpened = false;
-  adDone = false;
-
-  document.getElementById('adWatchOverlay').style.display = 'none';
-  document.getElementById('taskModal').classList.remove('open');
-
-  // Reset claim button
-  awClaimBtn.style.display = 'none';
-  awClaimBtn.style.opacity = '1';
-  awClaimBtn.textContent = '✅ Claim ৳' + (cfg.adReward || 1);
-}
-
-// Cancel button
-document.getElementById('awCancel').addEventListener('click', () => {
-  if (!adDone) {
-    clearInterval(adTimer);
-    adTimer = null;
-    toast('❌ Ad cancelled — no reward', 'err');
-  }
-  closeAdWatch();
-});
-
 function showRewardPop(amt) {
   const pop = document.getElementById('rewardPop');
   document.getElementById('rpAmt').textContent = amt;
@@ -690,7 +703,7 @@ document.getElementById('adBtn').addEventListener('click', async () => {
     toast('Daily ad limit reached!', 'warn');
     return;
   }
-  openAdWatch('ad', null, cfg.adReward || 1);
+  openAdModal('ad', null, cfg.adReward || 1);
 });
 
 // ════════════════════════════════════════════════════
@@ -810,7 +823,7 @@ window._openTask = (id, name, reward, icon, desc, link) => {
 
 document.getElementById('tmStart').addEventListener('click', () => {
   document.getElementById('taskModal').classList.remove('open');
-  openAdWatch('task', currentTaskId, currentReward);
+  openAdModal('task', currentTaskId, currentReward);
 });
 
 // ════════════════════════════════════════════════════
@@ -818,11 +831,13 @@ document.getElementById('tmStart').addEventListener('click', () => {
 // ════════════════════════════════════════════════════
 history.pushState(null, '', location.href);
 window.addEventListener('popstate', () => {
-  if (document.getElementById('adWatchOverlay').style.display !== 'none') {
+  if (adModal.classList.contains('open')) {
     if (!adDone) {
       clearInterval(adTimer);
       adTimer = null;
-      closeAdWatch();
+      clearInterval(adTabCheckInterval);
+      adTabCheckInterval = null;
+      closeAdModal();
       toast('❌ Ad cancelled — no reward', 'err');
     }
     history.pushState(null, '', location.href);
