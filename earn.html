@@ -6,7 +6,9 @@
 <title>EarnPro – Earn</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
-/* AD LIMIT BAR */
+/* ════════════════════════════════════════════════════════
+   EARN PAGE STYLES (keep existing)
+   ════════════════════════════════════════════════════════ */
 .ad-limit-bar{background:var(--card);border:1px solid var(--br);border-radius:var(--r2);padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ad-limit-left{flex:1}
 .ad-limit-title{font-size:13px;font-weight:700;margin-bottom:5px}
@@ -18,7 +20,6 @@
 .ad-limit-count{font-size:22px;font-weight:900;color:var(--pu);text-align:center;line-height:1}
 .ad-limit-lbl{font-size:10px;color:var(--t3);text-align:center}
 
-/* STREAK BANNER */
 .streak-banner{background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(251,191,36,.1));border:1px solid rgba(245,158,11,.3);border-radius:var(--r2);padding:13px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .streak-fire{font-size:28px}
 .streak-info{flex:1}
@@ -26,7 +27,6 @@
 .streak-sub{font-size:11px;color:var(--t2);margin-top:2px}
 .streak-count{font-size:24px;font-weight:900;color:var(--gold)}
 
-/* TASK CARD */
 .task-card-v2{background:var(--card);border:1px solid var(--br);border-radius:var(--r2);padding:0;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
 .task-card-v2:hover{border-color:var(--brh);box-shadow:0 6px 24px rgba(0,0,0,.3)}
 .task-card-v2.done{opacity:.7}
@@ -35,72 +35,76 @@
 .tc-reward-txt{font-size:12px;font-weight:700;color:var(--green)}
 .tc-steps{font-size:10px;color:var(--t3)}
 
-/* ════════════════════════════════════════════════════════
-   ADSTERRA-STYLE AD WATCH SYSTEM
-   ════════════════════════════════════════════════════════ */
-
-/* Modal backdrop */
-#adModal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
-#adModal.open{display:flex}
-
-/* Bottom sheet */
-.ad-sheet{background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 30px;width:100%;max-width:420px;margin:0 auto;animation:slideUp .35s ease;position:relative}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-
-.ad-sheet .ad-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 16px}
-
-.ad-sheet .ad-lock{text-align:center;margin-bottom:16px}
-.ad-sheet .ad-lock-ico{font-size:40px;margin-bottom:8px}
-.ad-sheet .ad-lock-title{font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:4px}
-.ad-sheet .ad-lock-sub{font-size:13px;color:#666}
-
-/* Progress */
-.ad-progress-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:12px 16px;background:#f8f9fa;border-radius:12px}
-.ad-progress-label{font-size:14px;font-weight:600;color:#333}
-.ad-progress-count{font-size:20px;font-weight:800;color:var(--p)}
-.ad-progress-count span{font-size:14px;color:#999;font-weight:500}
-
-/* Timer display */
-.ad-timer-box{text-align:center;margin-bottom:16px;padding:16px;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(168,85,247,.05));border-radius:16px;border:1px solid rgba(124,58,237,.15)}
-.ad-timer-box .ad-timer-num{font-size:36px;font-weight:900;color:var(--pu);font-family:'Outfit',monospace}
-.ad-timer-box .ad-timer-lbl{font-size:12px;color:#888;margin-top:4px}
-
-/* Main action button */
-.ad-action-btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;transition:all .2s;margin-bottom:12px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;display:flex;align-items:center;justify-content:center;gap:8px}
-.ad-action-btn:active{transform:scale(.97)}
-
-.ad-action-btn.primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 16px rgba(16,185,129,.3)}
-.ad-action-btn.primary:disabled{opacity:.6;cursor:not-allowed}
-
-.ad-action-btn.secondary{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;box-shadow:0 4px 16px var(--pglow)}
-
-/* Warning text */
-.ad-warning{text-align:center;font-size:12px;color:#e74c3c;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px}
-.ad-warning.hidden{display:none}
-
-.ad-powered{text-align:center;font-size:11px;color:#aaa}
-
-/* Status texts */
-.ad-status-waiting{color:#666}
-.ad-status-running{color:var(--pu)}
-.ad-status-done{color:#10b981}
-
-/* REWARD POP */
-.reward-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10010;background:linear-gradient(135deg,var(--p),var(--pl));border-radius:24px;padding:28px 36px;text-align:center;display:none;animation:popIn .4s ease;box-shadow:0 0 60px var(--pglow)}
-.reward-pop .rp-ico{font-size:48px;margin-bottom:10px}
-.reward-pop .rp-amt{font-size:36px;font-weight:900;color:#fff;margin-bottom:4px}
-.reward-pop .rp-lbl{font-size:14px;color:rgba(255,255,255,.75)}
-
-/* SPIN WHEEL TEASER */
 .spin-teaser{background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(168,85,247,.1));border:1px solid var(--brh);border-radius:var(--r2);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px;cursor:pointer;transition:all .2s}
 .spin-teaser:hover{border-color:var(--pl);box-shadow:0 4px 20px var(--pglow2)}
 .spin-ico{font-size:32px;animation:spinAnim 4s linear infinite}
 @keyframes spinAnim{to{transform:rotate(360deg)}}
 
-/* TASK MODAL */
 .tm-ad-note{background:rgba(124,58,237,.1);border:1px solid var(--br);border-radius:var(--r2);padding:11px 14px;font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.5}
 .tm-link-btn{display:flex;align-items:center;gap:8px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:var(--r2);padding:11px 14px;font-size:13px;font-weight:600;color:#60a5fa;text-decoration:none;margin-bottom:12px;transition:all .2s}
 .tm-link-btn:hover{background:rgba(59,130,246,.2)}
+
+.reward-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10010;background:linear-gradient(135deg,var(--p),var(--pl));border-radius:24px;padding:28px 36px;text-align:center;display:none;animation:popIn .4s ease;box-shadow:0 0 60px var(--pglow)}
+.reward-pop .rp-ico{font-size:48px;margin-bottom:10px}
+.reward-pop .rp-amt{font-size:36px;font-weight:900;color:#fff;margin-bottom:4px}
+.reward-pop .rp-lbl{font-size:14px;color:rgba(255,255,255,.75)}
+
+/* ════════════════════════════════════════════════════════
+   ADSTERRA-STYLE BOTTOM SHEET MODAL (EXACT MATCH)
+   ════════════════════════════════════════════════════════ */
+#adSheetOverlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .3s ease}
+#adSheetOverlay.open{display:flex;opacity:1}
+
+.ad-sheet-bg{background:#fff;border-radius:24px 24px 0 0;padding:0;width:100%;max-width:480px;margin:0 auto;animation:sheetUp .35s cubic-bezier(.16,1,.3,1);position:relative;box-shadow:0 -10px 40px rgba(0,0,0,.3)}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+/* Handle bar */
+.ad-sheet-handle{width:40px;height:5px;background:#e0e0e0;border-radius:3px;margin:12px auto 8px}
+
+/* Lock icon */
+.ad-sheet-lock{text-align:center;padding:8px 24px 4px}
+.ad-sheet-lock .lock-icon{font-size:44px;line-height:1;margin-bottom:4px;display:block}
+
+/* Title */
+.ad-sheet-title{text-align:center;font-size:20px;font-weight:800;color:#1a1a2e;padding:0 24px 4px;line-height:1.3}
+
+/* Subtitle */
+.ad-sheet-sub{text-align:center;font-size:13px;color:#888;padding:0 24px 16px}
+
+/* Progress row */
+.ad-sheet-progress{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;margin:0 16px 16px;background:#f5f7fa;border-radius:12px}
+.ad-sheet-progress-label{font-size:15px;font-weight:600;color:#333}
+.ad-sheet-progress-count{font-size:22px;font-weight:800;color:#10b981}
+.ad-sheet-progress-count .total{color:#aaa;font-size:15px;font-weight:500}
+
+/* Progress bar */
+.ad-sheet-bar{height:6px;background:#e8ecf1;border-radius:3px;margin:0 16px 20px;overflow:hidden}
+.ad-sheet-bar-fill{height:100%;background:linear-gradient(90deg,#10b981,#059669);width:0%;transition:width .5s ease;border-radius:3px}
+
+/* Timer box */
+.ad-sheet-timer{text-align:center;padding:16px;margin:0 16px 16px;background:linear-gradient(135deg,#f8f9ff,#f0f4ff);border-radius:16px;border:1px solid #e8e8ff}
+.ad-sheet-timer-num{font-size:40px;font-weight:900;color:#1a1a2e;font-family:'Outfit',monospace;line-height:1}
+.ad-sheet-timer-lbl{font-size:12px;color:#888;margin-top:4px}
+
+/* Main button - EXACT green style */
+.ad-sheet-btn{width:calc(100% - 32px);margin:0 16px 12px;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.ad-sheet-btn:active{transform:scale(.97)}
+
+.ad-sheet-btn.green{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 16px rgba(16,185,129,.35)}
+.ad-sheet-btn.green:disabled{opacity:.5;cursor:not-allowed}
+
+.ad-sheet-btn.purple{background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;box-shadow:0 4px 16px rgba(139,92,246,.35)}
+
+/* Warning */
+.ad-sheet-warn{text-align:center;padding:0 20px 8px;font-size:12px;color:#e74c3c;display:flex;align-items:center;justify-content:center;gap:6px;min-height:20px}
+.ad-sheet-warn .warn-icon{font-size:14px}
+
+/* Powered by */
+.ad-sheet-powered{text-align:center;font-size:11px;color:#bbb;padding:0 20px 20px}
+
+/* Close X */
+.ad-sheet-close{position:absolute;top:12px;right:16px;width:32px;height:32px;border:none;background:transparent;border-radius:50%;font-size:20px;color:#999;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.ad-sheet-close:active{background:#f0f0f0}
 </style>
 </head>
 <body>
@@ -114,7 +118,7 @@
 
 <div class="pg fade-in" style="padding-top:12px">
 
-  <!-- HERO BANNER -->
+  <!-- HERO -->
   <div style="background:linear-gradient(135deg,rgba(124,58,237,.32),rgba(168,85,247,.15));border:1px solid var(--brh);border-radius:var(--r3);padding:18px 16px;margin-bottom:12px;position:relative;overflow:hidden">
     <div style="position:absolute;right:-10px;top:-10px;font-size:80px;opacity:.08">💰</div>
     <div style="font-size:11px;color:var(--pu);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">💎 Premium Earning</div>
@@ -122,7 +126,7 @@
     <div style="font-size:12px;color:var(--t2)">Complete tasks & refer friends to maximize earnings</div>
   </div>
 
-  <!-- STREAK BANNER -->
+  <!-- STREAK -->
   <div class="streak-banner">
     <div class="streak-fire">🔥</div>
     <div class="streak-info">
@@ -135,7 +139,7 @@
     </div>
   </div>
 
-  <!-- AD LIMIT BAR -->
+  <!-- AD LIMIT -->
   <div class="ad-limit-bar">
     <div class="ad-limit-left">
       <div class="ad-limit-title">📺 Daily Ad Limit</div>
@@ -182,7 +186,7 @@
     </div>
   </div>
 
-  <!-- SPIN WHEEL TEASER -->
+  <!-- SPIN -->
   <div class="spin-teaser" onclick="showToastMsg('🎡 Spin Wheel coming soon! Stay tuned.')">
     <div class="spin-ico">🎡</div>
     <div>
@@ -219,7 +223,7 @@
 
 </div>
 
-<!-- ══ REWARD POP ══ -->
+<!-- REWARD POP -->
 <div id="rewardPop" class="reward-pop">
   <div class="rp-ico">🎉</div>
   <div class="rp-amt">+৳<span id="rpAmt">0</span></div>
@@ -227,46 +231,48 @@
 </div>
 
 <!-- ════════════════════════════════════════════════════════
-     ADSTERRA-STYLE AD MODAL (Bottom Sheet)
+     ADSTERRA-STYLE BOTTOM SHEET (EXACT MATCH TO SCREENSHOT)
      ════════════════════════════════════════════════════════ -->
-<div id="adModal">
-  <div class="ad-sheet">
-    <div class="ad-handle"></div>
+<div id="adSheetOverlay">
+  <div class="ad-sheet-bg">
+    <button class="ad-sheet-close" id="adSheetClose">✕</button>
+    <div class="ad-sheet-handle"></div>
 
-    <div class="ad-lock">
-      <div class="ad-lock-ico">🔒</div>
-      <div class="ad-lock-title">Complete Ad To Earn</div>
-      <div class="ad-lock-sub">Watch the full ad to unlock your reward</div>
+    <div class="ad-sheet-lock">
+      <span class="lock-icon">🔒</span>
     </div>
 
-    <!-- Progress -->
-    <div class="ad-progress-row">
-      <div class="ad-progress-label">Progress</div>
-      <div class="ad-progress-count"><span id="adProgressNum">0</span><span> / <span id="adProgressTotal">1</span></span></div>
+    <div class="ad-sheet-title">Complete Ad To Earn</div>
+    <div class="ad-sheet-sub">Watch the full ad to unlock your reward</div>
+
+    <div class="ad-sheet-progress">
+      <div class="ad-sheet-progress-label">Progress</div>
+      <div class="ad-sheet-progress-count"><span id="sheetProgressNum">0</span><span class="total"> / <span id="sheetProgressTotal">1</span></span></div>
     </div>
 
-    <!-- Timer -->
-    <div class="ad-timer-box">
-      <div class="ad-timer-num" id="adTimerNum">15</div>
-      <div class="ad-timer-lbl" id="adTimerLbl">seconds remaining</div>
+    <div class="ad-sheet-bar">
+      <div class="ad-sheet-bar-fill" id="sheetBarFill"></div>
     </div>
 
-    <!-- Action Button -->
-    <button class="ad-action-btn primary" id="adActionBtn">
-      <span>▶</span> <span id="adActionText">Open Ad Now</span>
+    <div class="ad-sheet-timer">
+      <div class="ad-sheet-timer-num" id="sheetTimerNum">15</div>
+      <div class="ad-sheet-timer-lbl" id="sheetTimerLbl">seconds remaining</div>
+    </div>
+
+    <button class="ad-sheet-btn green" id="sheetActionBtn">
+      <span>▶</span> <span id="sheetBtnText">আরো 15s দেখতে হবে</span>
     </button>
 
-    <!-- Warning -->
-    <div class="ad-warning" id="adWarning">
-      <span>⚠️</span>
-      <span id="adWarningText">Stay on the ad for 15s, then come back</span>
+    <div class="ad-sheet-warn" id="sheetWarn">
+      <span class="warn-icon">⚠️</span>
+      <span id="sheetWarnText">আরো 15s আটকে থাকুন, তারপর ব্যাক করুন</span>
     </div>
 
-    <div class="ad-powered">Powered by Adsterra</div>
+    <div class="ad-sheet-powered">Powered by Adsterra</div>
   </div>
 </div>
 
-<!-- ══ TASK MODAL ══ -->
+<!-- TASK MODAL -->
 <div class="modal-ov" id="taskModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -308,13 +314,12 @@ let cfg = {};
 let adTimer = null;
 let adDone = false;
 let adWindow = null;
-let adTabCheckInterval = null;
 let pendingType = null;
 let currentTaskId = null;
 let currentReward = 0;
 let isClaiming = false;
 let remainingTime = AD_DURATION;
-let isAdOpen = false;
+let timerRunning = false;
 
 window.showToastMsg = msg => toast(msg, 'info');
 
@@ -323,15 +328,12 @@ window.showToastMsg = msg => toast(msg, 'info');
 // ════════════════════════════════════════════════════
 onAuthStateChanged(auth, async user => {
   if (!user) { location.replace('login.html'); return; }
-
   uid = user.uid;
 
   try {
     const [usnap, settings] = await Promise.all([
-      getDoc(doc(db, 'users', uid)),
-      getSettings(db)
+      getDoc(doc(db, 'users', uid)), getSettings(db)
     ]);
-
     if (!usnap.exists()) { location.replace('login.html'); return; }
     userData = usnap.data();
     if (userData.isBanned) { location.replace('login.html'); return; }
@@ -353,13 +355,10 @@ onAuthStateChanged(auth, async user => {
     };
 
     document.getElementById('streakCount').textContent = userData.streak || 0;
-
     initAdLimit();
     checkDailyBonus();
     loadTasks();
-
   } catch (err) {
-    console.error('[Earn] Init error:', err);
     toast('Failed to load. Refresh.', 'err');
   }
 });
@@ -385,7 +384,7 @@ async function getAdCountToday() {
 async function setAdCountToday(count) {
   try {
     await updateDoc(doc(db, 'users', uid), { adsToday: count, lastAdDate: serverTimestamp() });
-  } catch (e) { console.error(e); }
+  } catch (e) {}
 }
 
 async function initAdLimit() {
@@ -417,271 +416,253 @@ function pickAdUrl() {
     cfg.adsterraUrl, cfg.monetagUrl, cfg.smartlinkUrl,
     cfg.adUrl1, cfg.adUrl2, cfg.adUrl3
   ].filter(u => u && typeof u === 'string' && u.trim().startsWith('http'));
-
-  if (!urls.length) return 'https://google.com';
+  if (!urls.length) return null;
   return urls[Math.floor(Math.random() * urls.length)];
 }
 
 // ════════════════════════════════════════════════════
-// AD MODAL SYSTEM (Adsterra Style)
+// BOTTOM SHEET SYSTEM
 // ════════════════════════════════════════════════════
-const adModal = document.getElementById('adModal');
-const adActionBtn = document.getElementById('adActionBtn');
-const adTimerNum = document.getElementById('adTimerNum');
-const adTimerLbl = document.getElementById('adTimerLbl');
-const adActionText = document.getElementById('adActionText');
-const adWarning = document.getElementById('adWarning');
-const adWarningText = document.getElementById('adWarningText');
-const adProgressNum = document.getElementById('adProgressNum');
+const sheetOverlay = document.getElementById('adSheetOverlay');
+const sheetActionBtn = document.getElementById('sheetActionBtn');
+const sheetBtnText = document.getElementById('sheetBtnText');
+const sheetTimerNum = document.getElementById('sheetTimerNum');
+const sheetTimerLbl = document.getElementById('sheetTimerLbl');
+const sheetWarn = document.getElementById('sheetWarn');
+const sheetWarnText = document.getElementById('sheetWarnText');
+const sheetProgressNum = document.getElementById('sheetProgressNum');
+const sheetBarFill = document.getElementById('sheetBarFill');
+const sheetClose = document.getElementById('adSheetClose');
 
-function openAdModal(type, taskId, reward) {
+function openSheet(type, taskId, reward) {
   pendingType = type;
   currentTaskId = taskId || null;
   currentReward = parseFloat(reward) || (parseFloat(cfg.adReward) || 1);
   adDone = false;
   isClaiming = false;
   remainingTime = AD_DURATION;
-  isAdOpen = false;
+  timerRunning = false;
+  adWindow = null;
 
   // Reset UI
-  adProgressNum.textContent = '0';
-  document.getElementById('adProgressTotal').textContent = '1';
-  adTimerNum.textContent = AD_DURATION;
-  adTimerNum.style.color = 'var(--pu)';
-  adTimerLbl.textContent = 'seconds remaining';
-  adActionBtn.className = 'ad-action-btn primary';
-  adActionBtn.disabled = false;
-  adActionText.textContent = 'Open Ad Now';
-  adWarning.classList.remove('hidden');
-  adWarningText.textContent = 'Stay on the ad for 15s, then come back';
+  sheetProgressNum.textContent = '0';
+  document.getElementById('sheetProgressTotal').textContent = '1';
+  sheetBarFill.style.width = '0%';
+  sheetTimerNum.textContent = AD_DURATION;
+  sheetTimerNum.style.color = '#1a1a2e';
+  sheetTimerLbl.textContent = 'seconds remaining';
+  sheetActionBtn.className = 'ad-sheet-btn green';
+  sheetActionBtn.disabled = false;
+  sheetBtnText.textContent = `আরো ${AD_DURATION}s দেখতে হবে`;
+  sheetWarn.style.display = 'flex';
+  sheetWarnText.textContent = `আরো ${AD_DURATION}s আটকে থাকুন, তারপর ব্যাক করুন`;
 
-  // Show modal
-  adModal.classList.add('open');
+  // Show
+  sheetOverlay.classList.add('open');
 }
 
-function closeAdModal() {
-  adModal.classList.remove('open');
+function closeSheet() {
+  sheetOverlay.classList.remove('open');
   clearInterval(adTimer);
   adTimer = null;
-  clearInterval(adTabCheckInterval);
-  adTabCheckInterval = null;
   adDone = false;
-  isAdOpen = false;
+  timerRunning = false;
   remainingTime = AD_DURATION;
-
-  // Reset button
-  adActionBtn.className = 'ad-action-btn primary';
-  adActionBtn.disabled = false;
-  adActionText.textContent = 'Open Ad Now';
 }
 
-// Action button click
-adActionBtn.addEventListener('click', handleActionBtn);
-adActionBtn.addEventListener('touchstart', (e) => {
+// Close X
+sheetClose.addEventListener('click', () => {
+  if (!adDone) {
+    clearInterval(adTimer);
+    adTimer = null;
+    timerRunning = false;
+  }
+  closeSheet();
+});
+
+// Close on backdrop click
+sheetOverlay.addEventListener('click', (e) => {
+  if (e.target === sheetOverlay) {
+    if (!adDone) {
+      clearInterval(adTimer);
+      adTimer = null;
+      timerRunning = false;
+    }
+    closeSheet();
+  }
+});
+
+// Action button
+sheetActionBtn.addEventListener('click', handleSheetAction);
+sheetActionBtn.addEventListener('touchstart', (e) => {
   e.preventDefault();
-  adActionBtn.style.transform = 'scale(0.97)';
+  sheetActionBtn.style.transform = 'scale(0.97)';
 }, { passive: false });
-adActionBtn.addEventListener('touchend', (e) => {
+sheetActionBtn.addEventListener('touchend', (e) => {
   e.preventDefault();
   e.stopPropagation();
-  adActionBtn.style.transform = 'scale(1)';
-  handleActionBtn(e);
+  sheetActionBtn.style.transform = 'scale(1)';
+  handleSheetAction(e);
 }, { passive: false });
 
-function handleActionBtn(e) {
+function handleSheetAction(e) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
 
   if (adDone) {
-    // Claim reward
     claimReward();
     return;
   }
 
-  if (isAdOpen) return; // Already open
+  if (timerRunning) return;
 
   const adUrl = pickAdUrl();
-  adWindow = window.open(adUrl, '_blank');
-
-  if (!adWindow || adWindow.closed) {
-    toast('Popup blocked! Allow popups for this site.', 'warn');
+  if (!adUrl) {
+    toast('No ad URL configured!', 'err');
     return;
   }
 
-  isAdOpen = true;
+  // Open ad in new tab
+  adWindow = window.open(adUrl, '_blank');
 
-  // Update UI to "Ad Opened" state
-  adActionBtn.disabled = true;
-  adActionText.textContent = 'Ad Opened...';
-  adWarningText.textContent = 'Stay on the ad! Timer pauses if you leave early.';
+  if (!adWindow || adWindow.closed) {
+    toast('Popup blocked! Allow popups.', 'warn');
+    return;
+  }
+
+  timerRunning = true;
+
+  // Update button
+  sheetActionBtn.disabled = true;
+  sheetBtnText.textContent = 'Ad Opened...';
+  sheetWarnText.textContent = 'অ্যাডে থাকুন! ব্যাক আসলে টাইমার পজ হবে।';
 
   // Start countdown
-  startAdTimer();
-
-  // Monitor tab focus
-  adTabCheckInterval = setInterval(() => {
-    checkTabStatus();
-  }, 500);
+  startTimer();
 }
 
-function startAdTimer() {
+function startTimer() {
   adTimer = setInterval(() => {
-    // Only count down if ad tab is open and focused
-    if (!isAdOpen) return;
+    // Check if user closed ad early
+    try {
+      if (adWindow && adWindow.closed && remainingTime > 0) {
+        // User closed ad before time
+        clearInterval(adTimer);
+        adTimer = null;
+        timerRunning = false;
+
+        sheetActionBtn.disabled = false;
+        sheetActionBtn.className = 'ad-sheet-btn green';
+        sheetBtnText.textContent = `▶ আরো ${remainingTime}s দেখতে হবে`;
+        sheetWarnText.textContent = `আরো ${remainingTime}s আটকে থাকুন, তারপর ব্যাক করুন`;
+        sheetTimerNum.style.color = '#e74c3c';
+        sheetTimerLbl.textContent = 'paused — click to resume';
+        return;
+      }
+    } catch (e) {}
+
+    if (!timerRunning) return;
 
     remainingTime--;
-    adTimerNum.textContent = remainingTime;
+    sheetTimerNum.textContent = remainingTime;
+
+    // Update progress
+    const pct = ((AD_DURATION - remainingTime) / AD_DURATION) * 100;
+    sheetBarFill.style.width = pct + '%';
+
+    // Update button text
+    if (remainingTime > 0) {
+      sheetBtnText.textContent = `Ad Running... ${remainingTime}s`;
+    }
 
     if (remainingTime <= 0) {
       clearInterval(adTimer);
       adTimer = null;
-      clearInterval(adTabCheckInterval);
-      adTabCheckInterval = null;
+      timerRunning = false;
 
       adDone = true;
-      isAdOpen = false;
 
-      // Update UI to "Done" state
-      adTimerNum.textContent = '✓';
-      adTimerNum.style.color = '#10b981';
-      adTimerLbl.textContent = 'Completed!';
+      // Complete UI
+      sheetTimerNum.textContent = '✓';
+      sheetTimerNum.style.color = '#10b981';
+      sheetTimerLbl.textContent = 'Completed!';
+      sheetBarFill.style.width = '100%';
+      sheetProgressNum.textContent = '1';
 
-      adActionBtn.className = 'ad-action-btn secondary';
-      adActionBtn.disabled = false;
-      adActionText.textContent = '✅ Claim ৳' + currentReward;
+      sheetActionBtn.className = 'ad-sheet-btn purple';
+      sheetActionBtn.disabled = false;
+      sheetBtnText.textContent = `✅ ক্লেইম করুন ৳${currentReward}`;
+      sheetWarn.style.display = 'none';
 
-      adWarning.classList.add('hidden');
-      adProgressNum.textContent = '1';
+      // Close ad tab
+      try { if (adWindow && !adWindow.closed) adWindow.close(); } catch (e) {}
 
-      // Auto-close ad tab if still open
-      try {
-        if (adWindow && !adWindow.closed) adWindow.close();
-      } catch (e) {}
-
-      toast('🎉 Ad completed! Click Claim to get reward.', 'ok');
+      toast('🎉 Ad completed! Click Claim.', 'ok');
     }
   }, 1000);
 }
-
-function checkTabStatus() {
-  try {
-    // Check if ad tab is still open
-    if (adWindow && adWindow.closed) {
-      // User closed the ad tab
-      if (!adDone && remainingTime > 0) {
-        // Pause timer
-        isAdOpen = false;
-        adActionBtn.disabled = false;
-        adActionText.textContent = '▶ Resume Ad';
-        adWarningText.textContent = `You left early! ${remainingTime}s remaining. Click to continue.`;
-        adTimerNum.style.color = '#e74c3c';
-        adTimerLbl.textContent = 'paused - click to resume';
-      }
-    }
-  } catch (e) {
-    // Cross-origin, can't check
-  }
-}
-
-// Also check when user comes back to this tab
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && isAdOpen && !adDone) {
-    // User came back to our tab while ad is supposed to be open
-    // Check if ad tab is still there
-    try {
-      if (adWindow && adWindow.closed && remainingTime > 0) {
-        isAdOpen = false;
-        adActionBtn.disabled = false;
-        adActionText.textContent = '▶ Resume Ad';
-        adWarningText.textContent = `You left early! ${remainingTime}s remaining. Click to continue.`;
-      }
-    } catch (e) {}
-  }
-});
 
 async function claimReward() {
   if (isClaiming) return;
   isClaiming = true;
 
-  adActionBtn.disabled = true;
-  adActionText.textContent = '⏳ Processing...';
+  sheetActionBtn.disabled = true;
+  sheetBtnText.textContent = '⏳ Processing...';
 
   try {
     await giveReward();
-    closeAdModal();
+    closeSheet();
     showRewardPop(currentReward);
   } catch (err) {
-    console.error('Claim error:', err);
+    console.error(err);
     isClaiming = false;
-    adActionBtn.disabled = false;
-    adActionText.textContent = '✅ Claim ৳' + currentReward;
+    sheetActionBtn.disabled = false;
+    sheetBtnText.textContent = `✅ ক্লেইম করুন ৳${currentReward}`;
     toast('Claim failed: ' + (err.message || 'Try again'), 'err');
   }
 }
 
-// ════════════════════════════════════════════════════
-// GIVE REWARD
-// ════════════════════════════════════════════════════
 async function giveReward() {
   if (!uid) throw new Error('Not authenticated');
-
   const r = currentReward;
   const userRef = doc(db, 'users', uid);
 
   if (pendingType === 'ad') {
     const freshSnap = await getDoc(userRef);
     if (!freshSnap.exists()) throw new Error('User not found');
-
     const fresh = freshSnap.data();
     const today = new Date().toDateString();
-    const lastAdDate = fresh.lastAdDate ?
-      (fresh.lastAdDate.toDate ? fresh.lastAdDate.toDate().toDateString() : new Date(fresh.lastAdDate).toDateString())
-      : null;
-
+    const lastAdDate = fresh.lastAdDate ? (fresh.lastAdDate.toDate ? fresh.lastAdDate.toDate().toDateString() : new Date(fresh.lastAdDate).toDateString()) : null;
     let currentAdCount = fresh.adsToday || 0;
     if (lastAdDate !== today) currentAdCount = 0;
     if (currentAdCount >= MAX_ADS) throw new Error('Daily limit reached');
 
     const newCount = currentAdCount + 1;
-
     await updateDoc(userRef, {
-      balance: increment(r),
-      totalEarned: increment(r),
-      adsWatched: increment(1),
-      adsToday: newCount,
-      lastAdDate: serverTimestamp()
+      balance: increment(r), totalEarned: increment(r), adsWatched: increment(1),
+      adsToday: newCount, lastAdDate: serverTimestamp()
     });
 
     userData.balance = (userData.balance || 0) + r;
     document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
-
     const remaining = Math.max(0, MAX_ADS - newCount);
     document.getElementById('adRemain').textContent = remaining;
     renderAdChips(newCount);
-
     if (remaining <= 0) {
       document.getElementById('adBtn').disabled = true;
       document.getElementById('adStatus').textContent = '⏳ Daily limit reached. Come back tomorrow!';
     }
-
     toast(`+৳${r} Ad reward! 📺`, 'ok');
 
   } else if (pendingType === 'task' && currentTaskId) {
     const freshSnap = await getDoc(userRef);
     const fresh = freshSnap.data();
-    if ((fresh.claimedTasks || []).includes(currentTaskId)) {
-      throw new Error('Already claimed!');
-    }
-
+    if ((fresh.claimedTasks || []).includes(currentTaskId)) throw new Error('Already claimed!');
     await updateDoc(userRef, {
-      balance: increment(r),
-      totalEarned: increment(r),
-      claimedTasks: arrayUnion(currentTaskId)
+      balance: increment(r), totalEarned: increment(r), claimedTasks: arrayUnion(currentTaskId)
     });
-
     userData.balance = (userData.balance || 0) + r;
     userData.claimedTasks = [...(userData.claimedTasks || []), currentTaskId];
     document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
-
     toast(`+৳${r} Task reward! ✅`, 'ok');
     loadTasks();
   }
@@ -699,11 +680,8 @@ function showRewardPop(amt) {
 // ════════════════════════════════════════════════════
 document.getElementById('adBtn').addEventListener('click', async () => {
   const used = await getAdCountToday();
-  if (used >= MAX_ADS) {
-    toast('Daily ad limit reached!', 'warn');
-    return;
-  }
-  openAdModal('ad', null, cfg.adReward || 1);
+  if (used >= MAX_ADS) { toast('Daily ad limit reached!', 'warn'); return; }
+  openSheet('ad', null, cfg.adReward || 1);
 });
 
 // ════════════════════════════════════════════════════
@@ -726,16 +704,12 @@ document.getElementById('dailyBtn').addEventListener('click', async () => {
   const fresh = freshSnap.data();
   const lc = fresh.dailyBonusClaimed;
   const done = lc && (lc.toDate ? lc.toDate().toDateString() : new Date(lc.seconds * 1000).toDateString()) === today;
-
   if (done) { toast('Already claimed!', 'warn'); return; }
 
   const bonus = cfg.dailyBonus || 2;
   await updateDoc(doc(db, 'users', uid), {
-    balance: increment(bonus),
-    totalEarned: increment(bonus),
-    dailyBonusClaimed: serverTimestamp()
+    balance: increment(bonus), totalEarned: increment(bonus), dailyBonusClaimed: serverTimestamp()
   });
-
   document.getElementById('dailyBtn').textContent = '✅ Claimed';
   document.getElementById('dailyBtn').disabled = true;
   document.getElementById('dailyStatus').textContent = 'Come back tomorrow!';
@@ -752,19 +726,14 @@ async function loadTasks() {
   try {
     const snap = await getDocs(collection(db, 'tasks'));
     const list = document.getElementById('taskList');
-
-    if (snap.empty) {
-      list.innerHTML = '<div class="empty"><div class="ei">📋</div><p>No tasks yet</p></div>';
-      return;
-    }
+    if (snap.empty) { list.innerHTML = '<div class="empty"><div class="ei">📋</div><p>No tasks yet</p></div>'; return; }
 
     list.innerHTML = '';
     const claimed = userData.claimedTasks || [];
     const colMap = { social: 'blue', video: 'purple', telegram: 'blue', link: 'green', survey: 'gold', other: 'purple' };
 
     snap.forEach(d => {
-      const t = d.data();
-      const tid = d.id;
+      const t = d.data(); const tid = d.id;
       const done = claimed.includes(tid);
       const col = colMap[t.type] || 'purple';
 
@@ -784,19 +753,16 @@ async function loadTasks() {
         <div class="tc-reward-badge">
           <div class="tc-reward-txt">+৳${t.reward} reward</div>
           <div class="tc-steps">Watch 15s ad to claim</div>
-        </div>
-      `;
+        </div>`;
 
       if (!done) {
         card.querySelector('button').addEventListener('click', () => {
           window._openTask(tid, t.name, t.reward, t.icon, t.description, t.link);
         });
       }
-
       list.appendChild(card);
     });
   } catch (err) {
-    console.error('[Tasks] Error:', err);
     document.getElementById('taskList').innerHTML = '<div class="empty"><div class="ei">⚠️</div><p>Failed to load tasks</p></div>';
   }
 }
@@ -809,7 +775,6 @@ window._openTask = (id, name, reward, icon, desc, link) => {
   document.getElementById('tmReward').textContent = `+৳${reward} reward`;
   document.getElementById('tmDesc').textContent = desc || '';
   document.getElementById('tmClaimAmt').textContent = reward;
-
   const linkBtn = document.getElementById('tmLinkBtn');
   if (link && link.trim()) {
     linkBtn.href = link;
@@ -823,7 +788,7 @@ window._openTask = (id, name, reward, icon, desc, link) => {
 
 document.getElementById('tmStart').addEventListener('click', () => {
   document.getElementById('taskModal').classList.remove('open');
-  openAdModal('task', currentTaskId, currentReward);
+  openSheet('task', currentTaskId, currentReward);
 });
 
 // ════════════════════════════════════════════════════
@@ -831,18 +796,15 @@ document.getElementById('tmStart').addEventListener('click', () => {
 // ════════════════════════════════════════════════════
 history.pushState(null, '', location.href);
 window.addEventListener('popstate', () => {
-  if (adModal.classList.contains('open')) {
+  if (sheetOverlay.classList.contains('open')) {
     if (!adDone) {
-      clearInterval(adTimer);
-      adTimer = null;
-      clearInterval(adTabCheckInterval);
-      adTabCheckInterval = null;
-      closeAdModal();
-      toast('❌ Ad cancelled — no reward', 'err');
+      clearInterval(adTimer); adTimer = null; timerRunning = false;
     }
+    closeSheet();
+    if (!adDone) toast('❌ Ad cancelled — no reward', 'err');
     history.pushState(null, '', location.href);
   }
 });
 </script>
 </body>
-</html>
+               
