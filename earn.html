@@ -35,7 +35,7 @@
 .tc-reward-txt{font-size:12px;font-weight:700;color:var(--green)}
 .tc-steps{font-size:10px;color:var(--t3)}
 
-/* FULLSCREEN AD */
+/* FULLSCREEN AD VIEWER */
 #adViewer{position:fixed;inset:0;z-index:9999;background:#000;display:none;flex-direction:column}
 #adViewer iframe{flex:1;width:100%;border:none;background:#fff}
 #adTimerOverlay{position:absolute;top:12px;right:12px;z-index:10001;pointer-events:none}
@@ -50,22 +50,20 @@
 #adProgLine{height:4px;background:rgba(255,255,255,.15)}
 #adProgFill{height:100%;background:linear-gradient(90deg,var(--p),var(--pl));width:0%;transition:width .9s linear}
 
-/* CLAIM BUTTON - FIXED: highest z-index, better touch target */
-#adClaimBtn{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:10005;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:50px;padding:18px 48px;font-size:17px;font-weight:800;font-family:'Outfit',sans-serif;cursor:pointer;box-shadow:0 0 30px var(--pglow),0 8px 24px rgba(0,0,0,.5);display:none;animation:popIn .4s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none;min-width:200px;text-align:center;pointer-events:auto}
-#adClaimBtn:active{transform:translateX(-50%) scale(.95)}
+/* CLAIM BUTTON - Always on top */
+#adClaimBtn{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:99999;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:50px;padding:18px 48px;font-size:17px;font-weight:800;font-family:'Outfit',sans-serif;cursor:pointer;box-shadow:0 0 30px var(--pglow),0 8px 24px rgba(0,0,0,.5);display:none;animation:popIn .4s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none;min-width:200px;text-align:center;pointer-events:auto}
+#adClaimBtn:active{transform:translateX(-50%) scale(.93)}
 @keyframes popIn{from{transform:translateX(-50%) scale(.7);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
 
-/* FIXED: adNoUrl - pointer-events none so claim button works, z-index below claim */
-#adNoUrl{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);z-index:10004;text-align:center;padding:30px;pointer-events:none}
-/* Allow clicks only on the countdown text, not blocking claim button */
-#adNoUrl > *{pointer-events:none}
+/* AD NO URL - BELOW claim button */
+#adNoUrl{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);z-index:10003;text-align:center;padding:30px}
 
-/* AD LOADING SPINNER */
-#adLoader{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);z-index:10004;text-align:center;padding:30px}
-.ad-spinner{width:56px;height:56px;border:4px solid rgba(124,58,237,.2);border-top-color:var(--pl);border-radius:50%;animation:spin .8s linear infinite}
+/* AD LOADING SCREEN - Instant show when button clicked */
+#adLoader{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:linear-gradient(135deg,var(--bg),var(--bg2));z-index:10002;text-align:center;padding:30px}
+.ad-spinner{width:56px;height:56px;border:4px solid rgba(124,58,237,.2);border-top-color:var(--pl);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ad-loader-txt{font-size:14px;color:var(--t2);font-weight:600}
-.ad-loader-sub{font-size:12px;color:var(--t3);margin-top:4px}
+.ad-loader-txt{font-size:16px;color:var(--t1);font-weight:700}
+.ad-loader-sub{font-size:13px;color:var(--t3);margin-top:4px}
 
 /* CONFETTI STYLE REWARD POP */
 .reward-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10010;background:linear-gradient(135deg,var(--p),var(--pl));border-radius:24px;padding:28px 36px;text-align:center;display:none;animation:popIn .4s ease;box-shadow:0 0 60px var(--pglow)}
@@ -216,14 +214,14 @@
   </div>
   <iframe id="adFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" allowfullscreen></iframe>
 
-  <!-- AD LOADING SPINNER (NEW) -->
+  <!-- AD LOADING SCREEN -->
   <div id="adLoader">
     <div class="ad-spinner"></div>
-    <div class="ad-loader-txt">Loading advertisement...</div>
-    <div class="ad-loader-sub">Please wait, your ad will appear shortly</div>
+    <div class="ad-loader-txt">Loading Ad...</div>
+    <div class="ad-loader-sub">Please wait, opening advertisement</div>
   </div>
 
-  <!-- FIXED: adNoUrl - z-index lowered, pointer-events:none so claim works -->
+  <!-- AD FALLBACK / NO URL -->
   <div id="adNoUrl">
     <div style="font-size:48px">📺</div>
     <div style="font-size:16px;font-weight:700;color:var(--t1)">Ad is loading...</div>
@@ -239,11 +237,11 @@
     </svg>
     <div id="adRingNum">15</div>
   </div>
-  <!-- Bottom -->
+  <!-- Bottom progress -->
   <div id="adBottomBar">
     <div id="adProgLine"><div id="adProgFill"></div></div>
   </div>
-  <!-- FIXED: Claim button - highest z-index, touch-friendly -->
+  <!-- CLAIM BUTTON -->
   <button id="adClaimBtn">✅ Claim ৳<span id="claimAmt">1</span></button>
 </div>
 
@@ -256,7 +254,6 @@
       <div id="tmName" style="font-size:19px;font-weight:800;margin-bottom:4px"></div>
       <div id="tmReward" style="font-size:15px;color:var(--green);font-weight:700;margin-bottom:16px"></div>
       <div id="tmDesc" style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.5"></div>
-      <!-- Task link button -->
       <a id="tmLinkBtn" href="#" target="_blank" rel="noopener" class="tm-link-btn" style="display:none">
         <span>🔗</span><span id="tmLinkTxt">Open Task Link</span>
       </a>
@@ -284,7 +281,6 @@ import { toast, copyText, refCode, openModal, getSettings } from './assets/js/ap
 const AD_DURATION = 15;
 const CIRC = 2 * Math.PI * 30;
 const MAX_ADS = 5;
-const AD_KEY_PREFIX = 'ep_adday_';
 const AD_COUNT_PREFIX = 'ep_adcnt_';
 
 let uid, userData, cfg;
@@ -320,7 +316,6 @@ const _earnUnsub = onAuthStateChanged(auth, async user => {
     else copyText(refUrl, document.getElementById('shareBtn'));
   };
 
-  // Streak
   const streak = userData.streak || 0;
   document.getElementById('streakCount').textContent = streak;
 
@@ -374,13 +369,17 @@ function pickAdUrl() {
   return urls[Math.floor(Math.random() * urls.length)];
 }
 
-// ── OPEN AD (FIXED: fast loading + claim button works) ──────────────────────────
+// ── OPEN AD (INSTANT + FAST + RELIABLE) ─────────────
 function openAd(type, taskId, reward) {
   pendingType = type;
   currentTaskId = taskId || null;
   currentReward = reward || (cfg.adReward||1);
   adDone = false;
 
+  // 1. INSTANTLY show ad viewer
+  document.getElementById('adViewer').style.display = 'flex';
+
+  // 2. Reset UI
   document.getElementById('avReward').textContent = currentReward;
   document.getElementById('claimAmt').textContent = currentReward;
   document.getElementById('adClaimBtn').style.display = 'none';
@@ -394,16 +393,13 @@ function openAd(type, taskId, reward) {
   const noUrl = document.getElementById('adNoUrl');
   const loader = document.getElementById('adLoader');
 
-  // Show viewer immediately
-  document.getElementById('adViewer').style.display = 'flex';
-
-  // FIXED: Show loader first, then try to load ad
   if (adUrl) {
+    // Show loader instantly
     loader.style.display = 'flex';
     noUrl.style.display = 'none';
     frame.style.display = 'block';
 
-    // FIXED: Preconnect to ad domain for faster loading
+    // Preconnect for speed
     try {
       const adDomain = new URL(adUrl).hostname;
       const pc = document.createElement('link');
@@ -411,24 +407,25 @@ function openAd(type, taskId, reward) {
       pc.href = 'https://' + adDomain;
       pc.crossOrigin = 'anonymous';
       document.head.appendChild(pc);
+      setTimeout(() => pc.remove(), 10000);
     } catch(e) {}
 
-    // FIXED: Set iframe src with a small delay to ensure loader is visible
+    // Load ad with small delay to ensure UI renders first
     requestAnimationFrame(() => {
-      frame.src = adUrl;
+      requestAnimationFrame(() => {
+        frame.src = adUrl;
+      });
     });
 
-    // FIXED: Listen for iframe load - hide loader when ad loads
+    // Auto-show fallback after 2.5s if ad doesn't load
     const loadTimeout = setTimeout(() => {
-      // Ad didn't load in 3 seconds, show fallback but keep timer running
       loader.style.display = 'none';
       noUrl.style.display = 'flex';
-    }, 3500);
+    }, 2500);
 
     frame.onload = () => {
       clearTimeout(loadTimeout);
       loader.style.display = 'none';
-      // Check if iframe loaded actual content or is blank
       try {
         const frameDoc = frame.contentDocument || frame.contentWindow.document;
         if (frameDoc && frameDoc.body && frameDoc.body.innerHTML === '') {
@@ -437,7 +434,6 @@ function openAd(type, taskId, reward) {
           noUrl.style.display = 'none';
         }
       } catch(e) {
-        // Cross-origin, can't check - assume it loaded
         noUrl.style.display = 'none';
       }
     };
@@ -448,15 +444,14 @@ function openAd(type, taskId, reward) {
       noUrl.style.display = 'flex';
     };
   } else {
-    // No ad URL configured
     loader.style.display = 'none';
     frame.style.display = 'none';
     noUrl.style.display = 'flex';
   }
 
-  // Start countdown timer immediately (user watches regardless)
+  // Start countdown immediately
   let rem = AD_DURATION;
-  adTimer = setInterval(async () => {
+  adTimer = setInterval(() => {
     rem--;
     const pct = (AD_DURATION - rem) / AD_DURATION;
     document.getElementById('adProgFill').style.width = (pct*100)+'%';
@@ -465,45 +460,57 @@ function openAd(type, taskId, reward) {
     document.getElementById('noUrlCount').textContent = rem;
     if (rem <= 0) {
       clearInterval(adTimer);
+      adTimer = null;
       adDone = true;
       document.getElementById('adRingNum').textContent = '✓';
-      // FIXED: Force show claim button with proper z-index
       const claimBtn = document.getElementById('adClaimBtn');
       claimBtn.style.display = 'block';
-      // Ensure claim is on top
-      claimBtn.style.zIndex = '10005';
+      claimBtn.style.zIndex = '99999';
+      // Auto-hide loader/noUrl when claim appears
+      loader.style.display = 'none';
+      noUrl.style.display = 'none';
     }
   }, 1000);
 }
 
-// FIXED: Claim button handler with touch support
+// ── CLAIM HANDLER (CLICK + TOUCH) ────────────────────
 const claimBtn = document.getElementById('adClaimBtn');
 
-// Mouse click
-claimBtn.addEventListener('click', async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+function handleClaim(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
   if (!adDone) return;
-  await giveReward();
-  closeAd();
-  showRewardPop(currentReward);
-});
+  giveReward().then(() => {
+    closeAd();
+    showRewardPop(currentReward);
+  }).catch(err => {
+    console.error('Claim error:', err);
+    toast('Claim failed. Please try again.', 'err');
+  });
+}
 
-// Touch events for mobile
+// Click (desktop)
+claimBtn.addEventListener('click', handleClaim);
+
+// Touch (mobile) - with visual feedback
 claimBtn.addEventListener('touchstart', (e) => {
   e.preventDefault();
-  claimBtn.style.transform = 'translateX(-50%) scale(0.95)';
+  claimBtn.style.transform = 'translateX(-50%) scale(0.93)';
+  claimBtn.style.opacity = '0.85';
 }, {passive: false});
 
-claimBtn.addEventListener('touchend', async (e) => {
+claimBtn.addEventListener('touchend', (e) => {
   e.preventDefault();
   e.stopPropagation();
   claimBtn.style.transform = 'translateX(-50%) scale(1)';
-  if (!adDone) return;
-  await giveReward();
-  closeAd();
-  showRewardPop(currentReward);
+  claimBtn.style.opacity = '1';
+  handleClaim(null);
 }, {passive: false});
+
+// Touch cancel - reset visual
+claimBtn.addEventListener('touchcancel', () => {
+  claimBtn.style.transform = 'translateX(-50%) scale(1)';
+  claimBtn.style.opacity = '1';
+});
 
 async function giveReward() {
   const r = currentReward;
@@ -535,6 +542,7 @@ async function giveReward() {
 
 function closeAd() {
   clearInterval(adTimer);
+  adTimer = null;
   const frame = document.getElementById('adFrame');
   frame.src = 'about:blank';
   frame.onload = null;
@@ -543,7 +551,8 @@ function closeAd() {
   document.getElementById('adLoader').style.display = 'none';
   document.getElementById('adNoUrl').style.display = 'none';
   document.getElementById('taskModal').classList.remove('open');
-  adDone = false; pendingType = null;
+  adDone = false;
+  pendingType = null;
 }
 
 function showRewardPop(amt) {
@@ -628,7 +637,6 @@ window._openTask = (id, name, reward, icon, desc, link) => {
   document.getElementById('tmReward').textContent = `+৳${reward} reward`;
   document.getElementById('tmDesc').textContent = desc||'';
   document.getElementById('tmClaimAmt').textContent = reward;
-  // Show task link if provided
   const linkBtn = document.getElementById('tmLinkBtn');
   if (link && link.trim()) {
     linkBtn.href = link;
@@ -645,11 +653,11 @@ document.getElementById('tmStart').addEventListener('click', () => {
   openAd('task', currentTaskId, currentReward);
 });
 
-// Back button — cancel if ad not done
+// Back button
 history.pushState(null,'',location.href);
 window.addEventListener('popstate', () => {
   if (document.getElementById('adViewer').style.display !== 'none') {
-    if (!adDone) { clearInterval(adTimer); closeAd(); toast('❌ Ad cancelled — no reward','err'); }
+    if (!adDone) { clearInterval(adTimer); adTimer = null; closeAd(); toast('❌ Ad cancelled — no reward','err'); }
     history.pushState(null,'',location.href);
   }
 });
