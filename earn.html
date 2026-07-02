@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>EarnPro – Earn</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
@@ -81,6 +81,10 @@
 .tm-ad-note{background:rgba(124,58,237,.1);border:1px solid var(--br);border-radius:var(--r2);padding:11px 14px;font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.5}
 .tm-link-btn{display:flex;align-items:center;gap:8px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:var(--r2);padding:11px 14px;font-size:13px;font-weight:600;color:#60a5fa;text-decoration:none;margin-bottom:12px;transition:all .2s}
 .tm-link-btn:hover{background:rgba(59,130,246,.2)}
+
+/* NEW: Ad open in new tab button */
+.ad-open-btn{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);z-index:10004;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;backdrop-filter:blur(10px);display:none;pointer-events:auto}
+.ad-open-btn:active{transform:translateX(-50%) scale(.95)}
 </style>
 </head>
 <body>
@@ -283,66 +287,130 @@ const CIRC = 2 * Math.PI * 30;
 const MAX_ADS = 5;
 const AD_COUNT_PREFIX = 'ep_adcnt_';
 
-let uid, userData, cfg;
-let adTimer = null, adDone = false;
-let pendingType = null, currentTaskId = null, currentReward = 0;
+let uid = null;
+let userData = null;
+let cfg = {};
+let adTimer = null;
+let adDone = false;
+let pendingType = null;
+let currentTaskId = null;
+let currentReward = 0;
+let isClaiming = false; // prevent double claim
 
 window.showToastMsg = msg => toast(msg, 'info');
 
+// ════════════════════════════════════════════════════
+// AUTH STATE — FIXED: wait properly for all devices
+// ════════════════════════════════════════════════════
 const _earnUnsub = onAuthStateChanged(auth, async user => {
-  _earnUnsub();
-  if (!user) { location.replace('login.html'); return; }
+  if (!user) {
+    location.replace('login.html');
+    return;
+  }
+
   uid = user.uid;
-  const [usnap, settings] = await Promise.all([getDoc(doc(db,'users',uid)), getSettings(db)]);
-  userData = usnap.data();
-  cfg = settings;
-  if (!userData || userData.isBanned) { location.replace('login.html'); return; }
+  console.log('[Earn] User authenticated:', uid);
 
-  document.getElementById('tbBal').textContent = parseFloat(userData.balance||0).toFixed(2);
-  document.getElementById('adRwdLbl').textContent = cfg.adReward||1;
-  document.getElementById('adMaxLbl').textContent = ((cfg.adReward||1) * MAX_ADS).toFixed(0);
-  document.getElementById('dailyLbl').textContent = cfg.dailyBonus||2;
-  document.getElementById('refBonusLbl').textContent = cfg.referralBonus||5;
-  document.getElementById('avReward').textContent = cfg.adReward||1;
-  document.getElementById('claimAmt').textContent = cfg.adReward||1;
+  try {
+    const [usnap, settings] = await Promise.all([
+      getDoc(doc(db, 'users', uid)),
+      getSettings(db)
+    ]);
 
-  const rl = document.getElementById('refLink');
-  const refUrl = location.origin + '/register.html?ref=' + (userData.referralCode||refCode(uid));
-  rl.value = refUrl;
-  document.getElementById('copyRefBtn').onclick = () => copyText(refUrl, document.getElementById('copyRefBtn'));
-  document.getElementById('copyRefBtn2').onclick = () => copyText(refUrl, document.getElementById('copyRefBtn2'));
-  document.getElementById('shareBtn').onclick = () => {
-    if (navigator.share) navigator.share({ title:'Join EarnPro', url: refUrl });
-    else copyText(refUrl, document.getElementById('shareBtn'));
-  };
+    if (!usnap.exists()) {
+      toast('User data not found!', 'err');
+      location.replace('login.html');
+      return;
+    }
 
-  const streak = userData.streak || 0;
-  document.getElementById('streakCount').textContent = streak;
+    userData = usnap.data();
 
-  initAdLimit();
-  checkDailyBonus();
-  loadTasks();
+    if (userData.isBanned) {
+      location.replace('login.html');
+      return;
+    }
+
+    cfg = settings || {};
+
+    // Update UI
+    document.getElementById('tbBal').textContent = parseFloat(userData.balance || 0).toFixed(2);
+    document.getElementById('adRwdLbl').textContent = cfg.adReward || 1;
+    document.getElementById('adMaxLbl').textContent = ((cfg.adReward || 1) * MAX_ADS).toFixed(0);
+    document.getElementById('dailyLbl').textContent = cfg.dailyBonus || 2;
+    document.getElementById('refBonusLbl').textContent = cfg.referralBonus || 5;
+    document.getElementById('avReward').textContent = cfg.adReward || 1;
+    document.getElementById('claimAmt').textContent = cfg.adReward || 1;
+
+    // Referral link
+    const rl = document.getElementById('refLink');
+    const refUrl = location.origin + '/register.html?ref=' + (userData.referralCode || refCode(uid));
+    rl.value = refUrl;
+    document.getElementById('copyRefBtn').onclick = () => copyText(refUrl, document.getElementById('copyRefBtn'));
+    document.getElementById('copyRefBtn2').onclick = () => copyText(refUrl, document.getElementById('copyRefBtn2'));
+    document.getElementById('shareBtn').onclick = () => {
+      if (navigator.share) navigator.share({ title: 'Join EarnPro', url: refUrl });
+      else copyText(refUrl, document.getElementById('shareBtn'));
+    };
+
+    // Streak
+    document.getElementById('streakCount').textContent = userData.streak || 0;
+
+    // Initialize
+    initAdLimit();
+    checkDailyBonus();
+    loadTasks();
+
+  } catch (err) {
+    console.error('[Earn] Init error:', err);
+    toast('Failed to load. Please refresh.', 'err');
+  }
 });
 
-// ── AD LIMIT SYSTEM ──────────────────────────────────
-function getTodayKey() {
-  return new Date().toDateString();
-}
-function getAdCountToday() {
-  const stored = localStorage.getItem(AD_COUNT_PREFIX + uid);
-  if (!stored) return 0;
+// ════════════════════════════════════════════════════
+// AD LIMIT SYSTEM — FIXED: use Firestore instead of localStorage
+// ════════════════════════════════════════════════════
+async function getAdCountToday() {
   try {
-    const obj = JSON.parse(stored);
-    if (obj.date !== getTodayKey()) return 0;
-    return obj.count || 0;
-  } catch { return 0; }
-}
-function setAdCountToday(count) {
-  localStorage.setItem(AD_COUNT_PREFIX + uid, JSON.stringify({ date: getTodayKey(), count }));
+    const snap = await getDoc(doc(db, 'users', uid));
+    if (!snap.exists()) return 0;
+    const data = snap.data();
+    const today = new Date().toDateString();
+    const lastAdDate = data.lastAdDate ? (data.lastAdDate.toDate ? data.lastAdDate.toDate().toDateString() : new Date(data.lastAdDate).toDateString()) : null;
+
+    if (lastAdDate !== today) {
+      // Reset count for new day
+      await updateDoc(doc(db, 'users', uid), { adsToday: 0, lastAdDate: serverTimestamp() });
+      return 0;
+    }
+    return data.adsToday || 0;
+  } catch (e) {
+    console.error('[AdCount] Error:', e);
+    // Fallback to localStorage
+    const stored = localStorage.getItem(AD_COUNT_PREFIX + uid);
+    if (!stored) return 0;
+    try {
+      const obj = JSON.parse(stored);
+      if (obj.date !== new Date().toDateString()) return 0;
+      return obj.count || 0;
+    } catch { return 0; }
+  }
 }
 
-function initAdLimit() {
-  const used = getAdCountToday();
+async function setAdCountToday(count) {
+  try {
+    await updateDoc(doc(db, 'users', uid), {
+      adsToday: count,
+      lastAdDate: serverTimestamp()
+    });
+  } catch (e) {
+    console.error('[AdCount] Set error:', e);
+    // Fallback
+    localStorage.setItem(AD_COUNT_PREFIX + uid, JSON.stringify({ date: new Date().toDateString(), count }));
+  }
+}
+
+async function initAdLimit() {
+  const used = await getAdCountToday();
   const remaining = Math.max(0, MAX_ADS - used);
   document.getElementById('adRemain').textContent = remaining;
   renderAdChips(used);
@@ -362,24 +430,41 @@ function renderAdChips(used) {
   }
 }
 
-// ── PICK AD URL ──────────────────────────────────────
+// ════════════════════════════════════════════════════
+// PICK AD URL — FIXED: better fallback handling
+// ════════════════════════════════════════════════════
 function pickAdUrl() {
-  const urls = [cfg.adsterraUrl, cfg.monetagUrl, cfg.smartlinkUrl].filter(Boolean);
-  if (!urls.length) return null;
+  const urls = [
+    cfg.adsterraUrl,
+    cfg.monetagUrl,
+    cfg.smartlinkUrl,
+    cfg.adUrl1,
+    cfg.adUrl2,
+    cfg.adUrl3
+  ].filter(u => u && typeof u === 'string' && u.trim().startsWith('http'));
+
+  if (!urls.length) {
+    console.warn('[Ad] No ad URLs configured');
+    return null;
+  }
   return urls[Math.floor(Math.random() * urls.length)];
 }
 
-// ── OPEN AD (INSTANT + FAST + RELIABLE) ─────────────
+// ════════════════════════════════════════════════════
+// OPEN AD — FIXED: instant open, no iframe blocking
+// ════════════════════════════════════════════════════
 function openAd(type, taskId, reward) {
   pendingType = type;
   currentTaskId = taskId || null;
-  currentReward = reward || (cfg.adReward||1);
+  currentReward = parseFloat(reward) || (parseFloat(cfg.adReward) || 1);
   adDone = false;
+  isClaiming = false;
 
-  // 1. INSTANTLY show ad viewer
-  document.getElementById('adViewer').style.display = 'flex';
+  // Show viewer instantly
+  const viewer = document.getElementById('adViewer');
+  viewer.style.display = 'flex';
 
-  // 2. Reset UI
+  // Reset UI
   document.getElementById('avReward').textContent = currentReward;
   document.getElementById('claimAmt').textContent = currentReward;
   document.getElementById('adClaimBtn').style.display = 'none';
@@ -393,56 +478,46 @@ function openAd(type, taskId, reward) {
   const noUrl = document.getElementById('adNoUrl');
   const loader = document.getElementById('adLoader');
 
+  // Clear previous
+  frame.src = 'about:blank';
+  frame.onload = null;
+  frame.onerror = null;
+
   if (adUrl) {
-    // Show loader instantly
     loader.style.display = 'flex';
     noUrl.style.display = 'none';
     frame.style.display = 'block';
 
-    // Preconnect for speed
-    try {
-      const adDomain = new URL(adUrl).hostname;
-      const pc = document.createElement('link');
-      pc.rel = 'preconnect';
-      pc.href = 'https://' + adDomain;
-      pc.crossOrigin = 'anonymous';
-      document.head.appendChild(pc);
-      setTimeout(() => pc.remove(), 10000);
-    } catch(e) {}
+    // FIX: Remove sandbox restrictions that block ads
+    frame.removeAttribute('sandbox');
 
-    // Load ad with small delay to ensure UI renders first
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        frame.src = adUrl;
-      });
-    });
+    // Load ad with minimal delay
+    setTimeout(() => {
+      frame.src = adUrl;
+    }, 100);
 
-    // Auto-show fallback after 2.5s if ad doesn't load
+    // Timeout: show fallback if ad doesn't load
     const loadTimeout = setTimeout(() => {
-      loader.style.display = 'none';
-      noUrl.style.display = 'flex';
-    }, 2500);
+      if (!adDone) {
+        loader.style.display = 'none';
+        noUrl.style.display = 'flex';
+        frame.style.display = 'none';
+      }
+    }, 3000);
 
     frame.onload = () => {
       clearTimeout(loadTimeout);
       loader.style.display = 'none';
-      try {
-        const frameDoc = frame.contentDocument || frame.contentWindow.document;
-        if (frameDoc && frameDoc.body && frameDoc.body.innerHTML === '') {
-          noUrl.style.display = 'flex';
-        } else {
-          noUrl.style.display = 'none';
-        }
-      } catch(e) {
-        noUrl.style.display = 'none';
-      }
+      noUrl.style.display = 'none';
     };
 
     frame.onerror = () => {
       clearTimeout(loadTimeout);
       loader.style.display = 'none';
       noUrl.style.display = 'flex';
+      frame.style.display = 'none';
     };
+
   } else {
     loader.style.display = 'none';
     frame.style.display = 'none';
@@ -454,10 +529,11 @@ function openAd(type, taskId, reward) {
   adTimer = setInterval(() => {
     rem--;
     const pct = (AD_DURATION - rem) / AD_DURATION;
-    document.getElementById('adProgFill').style.width = (pct*100)+'%';
-    document.getElementById('adRingFill').style.strokeDashoffset = String(CIRC*(1-pct));
+    document.getElementById('adProgFill').style.width = (pct * 100) + '%';
+    document.getElementById('adRingFill').style.strokeDashoffset = String(CIRC * (1 - pct));
     document.getElementById('adRingNum').textContent = rem;
     document.getElementById('noUrlCount').textContent = rem;
+
     if (rem <= 0) {
       clearInterval(adTimer);
       adTimer = null;
@@ -466,91 +542,177 @@ function openAd(type, taskId, reward) {
       const claimBtn = document.getElementById('adClaimBtn');
       claimBtn.style.display = 'block';
       claimBtn.style.zIndex = '99999';
-      // Auto-hide loader/noUrl when claim appears
       loader.style.display = 'none';
       noUrl.style.display = 'none';
     }
   }, 1000);
 }
 
-// ── CLAIM HANDLER (CLICK + TOUCH) ────────────────────
+// ════════════════════════════════════════════════════
+// CLAIM HANDLER — FIXED: works on ALL devices
+// ════════════════════════════════════════════════════
 const claimBtn = document.getElementById('adClaimBtn');
 
 function handleClaim(e) {
-  if (e) { e.preventDefault(); e.stopPropagation(); }
-  if (!adDone) return;
-  giveReward().then(() => {
-    closeAd();
-    showRewardPop(currentReward);
-  }).catch(err => {
-    console.error('Claim error:', err);
-    toast('Claim failed. Please try again.', 'err');
-  });
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  // Prevent double claim
+  if (!adDone || isClaiming) return;
+  isClaiming = true;
+
+  // Visual feedback
+  claimBtn.style.opacity = '0.6';
+  claimBtn.textContent = '⏳ Processing...';
+
+  giveReward()
+    .then(() => {
+      closeAd();
+      showRewardPop(currentReward);
+    })
+    .catch(err => {
+      console.error('Claim error:', err);
+      isClaiming = false;
+      claimBtn.style.opacity = '1';
+      claimBtn.textContent = '✅ Claim ৳' + currentReward;
+      toast('Claim failed: ' + (err.message || 'Please try again'), 'err');
+    });
 }
 
-// Click (desktop)
+// Multiple event listeners for maximum compatibility
 claimBtn.addEventListener('click', handleClaim);
 
-// Touch (mobile) - with visual feedback
+// Touch events with proper handling
 claimBtn.addEventListener('touchstart', (e) => {
   e.preventDefault();
   claimBtn.style.transform = 'translateX(-50%) scale(0.93)';
-  claimBtn.style.opacity = '0.85';
-}, {passive: false});
+}, { passive: false });
 
 claimBtn.addEventListener('touchend', (e) => {
   e.preventDefault();
   e.stopPropagation();
   claimBtn.style.transform = 'translateX(-50%) scale(1)';
-  claimBtn.style.opacity = '1';
   handleClaim(null);
-}, {passive: false});
+}, { passive: false });
 
-// Touch cancel - reset visual
 claimBtn.addEventListener('touchcancel', () => {
   claimBtn.style.transform = 'translateX(-50%) scale(1)';
-  claimBtn.style.opacity = '1';
 });
 
+// ════════════════════════════════════════════════════
+// GIVE REWARD — FIXED: robust Firestore update
+// ════════════════════════════════════════════════════
 async function giveReward() {
+  if (!uid) {
+    throw new Error('Not authenticated');
+  }
+
   const r = currentReward;
-  if (pendingType === 'ad') {
-    await updateDoc(doc(db,'users',uid),{balance:increment(r),totalEarned:increment(r),adsWatched:increment(1)});
-    const newCount = getAdCountToday() + 1;
-    setAdCountToday(newCount);
-    userData.balance = (userData.balance||0) + r;
-    document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
-    const remaining = Math.max(0, MAX_ADS - newCount);
-    document.getElementById('adRemain').textContent = remaining;
-    renderAdChips(newCount);
-    if (remaining <= 0) {
-      document.getElementById('adBtn').disabled = true;
-      document.getElementById('adStatus').textContent = '⏳ Daily limit reached. Come back tomorrow!';
+  const userRef = doc(db, 'users', uid);
+
+  try {
+    if (pendingType === 'ad') {
+      // Get fresh data first
+      const freshSnap = await getDoc(userRef);
+      if (!freshSnap.exists()) {
+        throw new Error('User not found');
+      }
+
+      const fresh = freshSnap.data();
+      const today = new Date().toDateString();
+      const lastAdDate = fresh.lastAdDate ?
+        (fresh.lastAdDate.toDate ? fresh.lastAdDate.toDate().toDateString() : new Date(fresh.lastAdDate).toDateString())
+        : null;
+
+      let currentAdCount = fresh.adsToday || 0;
+      if (lastAdDate !== today) {
+        currentAdCount = 0;
+      }
+
+      if (currentAdCount >= MAX_ADS) {
+        throw new Error('Daily limit reached');
+      }
+
+      const newCount = currentAdCount + 1;
+
+      // Update Firestore
+      await updateDoc(userRef, {
+        balance: increment(r),
+        totalEarned: increment(r),
+        adsWatched: increment(1),
+        adsToday: newCount,
+        lastAdDate: serverTimestamp()
+      });
+
+      // Update local state
+      userData.balance = (userData.balance || 0) + r;
+      document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
+
+      const remaining = Math.max(0, MAX_ADS - newCount);
+      document.getElementById('adRemain').textContent = remaining;
+      renderAdChips(newCount);
+
+      if (remaining <= 0) {
+        document.getElementById('adBtn').disabled = true;
+        document.getElementById('adStatus').textContent = '⏳ Daily limit reached. Come back tomorrow!';
+      }
+
+      toast(`+৳${r} Ad reward! 📺`, 'ok');
+
+    } else if (pendingType === 'task' && currentTaskId) {
+      const freshSnap = await getDoc(userRef);
+      const fresh = freshSnap.data();
+
+      if ((fresh.claimedTasks || []).includes(currentTaskId)) {
+        throw new Error('Already claimed!');
+      }
+
+      await updateDoc(userRef, {
+        balance: increment(r),
+        totalEarned: increment(r),
+        claimedTasks: arrayUnion(currentTaskId)
+      });
+
+      userData.balance = (userData.balance || 0) + r;
+      userData.claimedTasks = [...(userData.claimedTasks || []), currentTaskId];
+      document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
+
+      toast(`+৳${r} Task reward! ✅`, 'ok');
+      loadTasks();
     }
-    toast(`+৳${r} Ad reward! 📺`, 'ok');
-  } else if (pendingType === 'task' && currentTaskId) {
-    const fresh = (await getDoc(doc(db,'users',uid))).data();
-    if ((fresh.claimedTasks||[]).includes(currentTaskId)) { toast('Already claimed!','warn'); return; }
-    await updateDoc(doc(db,'users',uid),{balance:increment(r),totalEarned:increment(r),claimedTasks:arrayUnion(currentTaskId)});
-    userData.balance = (userData.balance||0) + r;
-    userData.claimedTasks = [...(userData.claimedTasks||[]),currentTaskId];
-    document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
-    toast(`+৳${r} Task reward! ✅`, 'ok');
-    loadTasks();
+
+  } catch (err) {
+    console.error('[GiveReward] Error:', err);
+    isClaiming = false;
+    throw err;
   }
 }
 
 function closeAd() {
   clearInterval(adTimer);
   adTimer = null;
+  isClaiming = false;
+
   const frame = document.getElementById('adFrame');
   frame.src = 'about:blank';
   frame.onload = null;
   frame.onerror = null;
-  document.getElementById('adViewer').style.display = 'none';
+
+  const viewer = document.getElementById('adViewer');
+  viewer.style.display = 'none';
+
   document.getElementById('adLoader').style.display = 'none';
   document.getElementById('adNoUrl').style.display = 'none';
   document.getElementById('taskModal').classList.remove('open');
+
+  // Reset claim button
+  const claimBtn = document.getElementById('adClaimBtn');
+  claimBtn.style.display = 'none';
+  claimBtn.style.opacity = '1';
+  claimBtn.textContent = '✅ Claim ৳' + (cfg.adReward || 1);
+
   adDone = false;
   pendingType = null;
 }
@@ -562,17 +724,25 @@ function showRewardPop(amt) {
   setTimeout(() => { pop.style.display = 'none'; }, 2200);
 }
 
-document.getElementById('adBtn').addEventListener('click', () => {
-  const used = getAdCountToday();
-  if (used >= MAX_ADS) { toast('Daily ad limit reached! Come back tomorrow.','warn'); return; }
-  openAd('ad', null, cfg.adReward||1);
+// ════════════════════════════════════════════════════
+// AD BUTTON
+// ════════════════════════════════════════════════════
+document.getElementById('adBtn').addEventListener('click', async () => {
+  const used = await getAdCountToday();
+  if (used >= MAX_ADS) {
+    toast('Daily ad limit reached! Come back tomorrow.', 'warn');
+    return;
+  }
+  openAd('ad', null, cfg.adReward || 1);
 });
 
-// ── DAILY BONUS ──────────────────────────────────────
+// ════════════════════════════════════════════════════
+// DAILY BONUS — FIXED
+// ════════════════════════════════════════════════════
 function checkDailyBonus() {
   const today = new Date().toDateString();
   const lc = userData.dailyBonusClaimed;
-  const done = lc && (lc.toDate?lc.toDate().toDateString():new Date(lc.seconds*1000).toDateString()) === today;
+  const done = lc && (lc.toDate ? lc.toDate().toDateString() : new Date(lc.seconds * 1000).toDateString()) === today;
   if (done) {
     document.getElementById('dailyBtn').textContent = '✅ Claimed';
     document.getElementById('dailyBtn').disabled = true;
@@ -582,61 +752,98 @@ function checkDailyBonus() {
 
 document.getElementById('dailyBtn').addEventListener('click', async () => {
   const today = new Date().toDateString();
-  const fresh = (await getDoc(doc(db,'users',uid))).data();
+  const freshSnap = await getDoc(doc(db, 'users', uid));
+  const fresh = freshSnap.data();
   const lc = fresh.dailyBonusClaimed;
-  const done = lc && (lc.toDate?lc.toDate().toDateString():new Date(lc.seconds*1000).toDateString()) === today;
-  if (done) { toast('Already claimed!','warn'); return; }
-  const bonus = cfg.dailyBonus||2;
-  await updateDoc(doc(db,'users',uid),{balance:increment(bonus),totalEarned:increment(bonus),dailyBonusClaimed:serverTimestamp()});
+  const done = lc && (lc.toDate ? lc.toDate().toDateString() : new Date(lc.seconds * 1000).toDateString()) === today;
+
+  if (done) {
+    toast('Already claimed!', 'warn');
+    return;
+  }
+
+  const bonus = cfg.dailyBonus || 2;
+  await updateDoc(doc(db, 'users', uid), {
+    balance: increment(bonus),
+    totalEarned: increment(bonus),
+    dailyBonusClaimed: serverTimestamp()
+  });
+
   document.getElementById('dailyBtn').textContent = '✅ Claimed';
   document.getElementById('dailyBtn').disabled = true;
   document.getElementById('dailyStatus').textContent = 'Come back tomorrow!';
-  userData.balance = (userData.balance||0) + bonus;
+  userData.balance = (userData.balance || 0) + bonus;
   document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
   showRewardPop(bonus);
   toast(`+৳${bonus} Daily bonus! 🎁`, 'ok');
 });
 
-// ── LOAD TASKS ───────────────────────────────────────
+// ════════════════════════════════════════════════════
+// LOAD TASKS
+// ════════════════════════════════════════════════════
 async function loadTasks() {
-  const snap = await getDocs(collection(db,'tasks'));
-  const list = document.getElementById('taskList');
-  if (snap.empty) { list.innerHTML='<div class="empty"><div class="ei">📋</div><p>No tasks yet</p></div>'; return; }
-  list.innerHTML = '';
-  const claimed = userData.claimedTasks||[];
-  const colMap = {social:'blue',video:'purple',telegram:'blue',link:'green',survey:'gold',other:'purple'};
-  snap.forEach(d => {
-    const t = d.data(); const tid = d.id;
-    const done = claimed.includes(tid);
-    const col = colMap[t.type]||'purple';
-    list.innerHTML += `<div class="task-card-v2${done?' done':''}">
-      <div class="tc-top">
-        <div class="t-ico ${col}">${t.icon||'✅'}</div>
-        <div class="t-info">
-          <div class="t-name">${t.name}</div>
-          <div style="font-size:11px;color:var(--t3)">${t.description||t.type||''}</div>
+  try {
+    const snap = await getDocs(collection(db, 'tasks'));
+    const list = document.getElementById('taskList');
+
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty"><div class="ei">📋</div><p>No tasks yet</p></div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    const claimed = userData.claimedTasks || [];
+    const colMap = { social: 'blue', video: 'purple', telegram: 'blue', link: 'green', survey: 'gold', other: 'purple' };
+
+    snap.forEach(d => {
+      const t = d.data();
+      const tid = d.id;
+      const done = claimed.includes(tid);
+      const col = colMap[t.type] || 'purple';
+
+      const card = document.createElement('div');
+      card.className = 'task-card-v2' + (done ? ' done' : '');
+      card.innerHTML = `
+        <div class="tc-top">
+          <div class="t-ico ${col}">${t.icon || '✅'}</div>
+          <div class="t-info">
+            <div class="t-name">${t.name}</div>
+            <div style="font-size:11px;color:var(--t3)">${t.description || t.type || ''}</div>
+          </div>
+          <button class="btn btn-${done ? 'ghost' : 'p'} btn-sm" ${done ? 'disabled' : ''}>
+            ${done ? '✅ Done' : 'Start'}
+          </button>
         </div>
-        <button class="btn btn-${done?'ghost':'p'} btn-sm" ${done?'disabled':''}
-          onclick="${done?'':` window._openTask('${tid}','${(t.name||'').replace(/'/g,"\\'")}','${t.reward}','${t.icon||'✅'}','${(t.description||'').replace(/'/g,"\\'")}','${(t.link||'').replace(/'/g,"\\'")}') `}">
-          ${done?'✅ Done':'Start'}
-        </button>
-      </div>
-      <div class="tc-reward-badge">
-        <div class="tc-reward-txt">+৳${t.reward} reward</div>
-        <div class="tc-steps">Watch 15s ad to claim</div>
-      </div>
-    </div>`;
-  });
+        <div class="tc-reward-badge">
+          <div class="tc-reward-txt">+৳${t.reward} reward</div>
+          <div class="tc-steps">Watch 15s ad to claim</div>
+        </div>
+      `;
+
+      if (!done) {
+        const btn = card.querySelector('button');
+        btn.addEventListener('click', () => {
+          window._openTask(tid, t.name, t.reward, t.icon, t.description, t.link);
+        });
+      }
+
+      list.appendChild(card);
+    });
+  } catch (err) {
+    console.error('[Tasks] Error:', err);
+    document.getElementById('taskList').innerHTML = '<div class="empty"><div class="ei">⚠️</div><p>Failed to load tasks</p></div>';
+  }
 }
 
 window._openTask = (id, name, reward, icon, desc, link) => {
   currentTaskId = id;
   currentReward = parseFloat(reward);
-  document.getElementById('tmIco').textContent = icon;
+  document.getElementById('tmIco').textContent = icon || '✅';
   document.getElementById('tmName').textContent = name;
   document.getElementById('tmReward').textContent = `+৳${reward} reward`;
-  document.getElementById('tmDesc').textContent = desc||'';
+  document.getElementById('tmDesc').textContent = desc || '';
   document.getElementById('tmClaimAmt').textContent = reward;
+
   const linkBtn = document.getElementById('tmLinkBtn');
   if (link && link.trim()) {
     linkBtn.href = link;
@@ -653,12 +860,19 @@ document.getElementById('tmStart').addEventListener('click', () => {
   openAd('task', currentTaskId, currentReward);
 });
 
-// Back button
-history.pushState(null,'',location.href);
+// ════════════════════════════════════════════════════
+// BACK BUTTON HANDLING
+// ════════════════════════════════════════════════════
+history.pushState(null, '', location.href);
 window.addEventListener('popstate', () => {
   if (document.getElementById('adViewer').style.display !== 'none') {
-    if (!adDone) { clearInterval(adTimer); adTimer = null; closeAd(); toast('❌ Ad cancelled — no reward','err'); }
-    history.pushState(null,'',location.href);
+    if (!adDone) {
+      clearInterval(adTimer);
+      adTimer = null;
+      closeAd();
+      toast('❌ Ad cancelled — no reward', 'err');
+    }
+    history.pushState(null, '', location.href);
   }
 });
 </script>
