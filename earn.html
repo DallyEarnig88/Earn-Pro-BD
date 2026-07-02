@@ -26,7 +26,7 @@
 .streak-sub{font-size:11px;color:var(--t2);margin-top:2px}
 .streak-count{font-size:24px;font-weight:900;color:var(--gold)}
 
-/* TASK CARD ENHANCED */
+/* TASK CARD */
 .task-card-v2{background:var(--card);border:1px solid var(--br);border-radius:var(--r2);padding:0;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
 .task-card-v2:hover{border-color:var(--brh);box-shadow:0 6px 24px rgba(0,0,0,.3)}
 .task-card-v2.done{opacity:.7}
@@ -35,37 +35,53 @@
 .tc-reward-txt{font-size:12px;font-weight:700;color:var(--green)}
 .tc-steps{font-size:10px;color:var(--t3)}
 
-/* FULLSCREEN AD VIEWER */
-#adViewer{position:fixed;inset:0;z-index:9999;background:#000;display:none;flex-direction:column}
-#adViewer iframe{flex:1;width:100%;border:none;background:#fff}
-#adTimerOverlay{position:absolute;top:12px;right:12px;z-index:10001;pointer-events:none}
-#adRingSvg{transform:rotate(-90deg)}
-#adRingFill{transition:stroke-dashoffset .9s linear;stroke:var(--pl);stroke-width:5;fill:none;stroke-linecap:round}
-#adRingBg{stroke:rgba(255,255,255,.15);stroke-width:5;fill:none}
-#adRingNum{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15px;font-weight:900;color:#fff;text-shadow:0 0 8px rgba(0,0,0,.9);font-family:'Outfit',monospace}
-#adTopStrip{position:absolute;top:0;left:0;right:0;z-index:10001;background:linear-gradient(135deg,rgba(124,58,237,.92),rgba(168,85,247,.85));backdrop-filter:blur(8px);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
-#adTopStrip .as-left{font-size:12px;font-weight:700;color:#fff}
-#adTopStrip .as-right{font-size:14px;font-weight:900;color:var(--gold2)}
-#adBottomBar{position:absolute;bottom:0;left:0;right:0;z-index:10001;pointer-events:none}
-#adProgLine{height:4px;background:rgba(255,255,255,.15)}
-#adProgFill{height:100%;background:linear-gradient(90deg,var(--p),var(--pl));width:0%;transition:width .9s linear}
+/* ════════════════════════════════════════════════════════
+   NEW: AD WATCH OVERLAY (NO IFRAME - FAST & RELIABLE)
+   ════════════════════════════════════════════════════════ */
+#adWatchOverlay{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#1a0a2e,#0d0221);display:none;flex-direction:column;align-items:center;justify-content:center}
+#adWatchOverlay .aw-top{position:absolute;top:0;left:0;right:0;background:linear-gradient(135deg,rgba(124,58,237,.92),rgba(168,85,247,.85));backdrop-filter:blur(8px);padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+#adWatchOverlay .aw-top .aw-left{font-size:13px;font-weight:700;color:#fff}
+#adWatchOverlay .aw-top .aw-right{font-size:15px;font-weight:900;color:var(--gold2)}
 
-/* CLAIM BUTTON - Always on top */
-#adClaimBtn{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:99999;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:50px;padding:18px 48px;font-size:17px;font-weight:800;font-family:'Outfit',sans-serif;cursor:pointer;box-shadow:0 0 30px var(--pglow),0 8px 24px rgba(0,0,0,.5);display:none;animation:popIn .4s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none;min-width:200px;text-align:center;pointer-events:auto}
-#adClaimBtn:active{transform:translateX(-50%) scale(.93)}
-@keyframes popIn{from{transform:translateX(-50%) scale(.7);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
+#adWatchOverlay .aw-center{text-align:center;padding:20px}
+#adWatchOverlay .aw-ico{font-size:64px;margin-bottom:16px;animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+#adWatchOverlay .aw-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px}
+#adWatchOverlay .aw-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:24px;line-height:1.5}
 
-/* AD NO URL - BELOW claim button */
-#adNoUrl{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);z-index:10003;text-align:center;padding:30px}
+/* Big countdown */
+#adWatchOverlay .aw-timer-wrap{position:relative;width:140px;height:140px;margin:0 auto 24px}
+#adWatchOverlay .aw-timer-ring{transform:rotate(-90deg)}
+#adWatchOverlay .aw-timer-bg{stroke:rgba(255,255,255,.1);stroke-width:6;fill:none}
+#adWatchOverlay .aw-timer-fill{stroke:var(--pl);stroke-width:6;fill:none;stroke-linecap:round;transition:stroke-dashoffset .9s linear}
+#adWatchOverlay .aw-timer-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:42px;font-weight:900;color:#fff;font-family:'Outfit',monospace}
 
-/* AD LOADING SCREEN - Instant show when button clicked */
-#adLoader{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:linear-gradient(135deg,var(--bg),var(--bg2));z-index:10002;text-align:center;padding:30px}
-.ad-spinner{width:56px;height:56px;border:4px solid rgba(124,58,237,.2);border-top-color:var(--pl);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ad-loader-txt{font-size:16px;color:var(--t1);font-weight:700}
-.ad-loader-sub{font-size:13px;color:var(--t3);margin-top:4px}
+/* Progress bar */
+#adWatchOverlay .aw-progress{width:80%;max-width:300px;height:6px;background:rgba(255,255,255,.1);border-radius:3px;margin-bottom:20px;overflow:hidden}
+#adWatchOverlay .aw-progress-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--pl));width:0%;transition:width .9s linear}
 
-/* CONFETTI STYLE REWARD POP */
+/* Open Ad button */
+#adWatchOverlay .aw-open-btn{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:50px;padding:16px 40px;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 0 30px var(--pglow),0 8px 24px rgba(0,0,0,.5);margin-bottom:12px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;animation:popIn .4s ease}
+#adWatchOverlay .aw-open-btn:active{transform:scale(.93)}
+#adWatchOverlay .aw-open-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Already Opened text */
+#adWatchOverlay .aw-opened-msg{font-size:12px;color:rgba(255,255,255,.5);display:none}
+
+/* Claim button */
+#adWatchOverlay .aw-claim-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:50px;padding:18px 48px;font-size:17px;font-weight:800;cursor:pointer;box-shadow:0 0 30px rgba(16,185,129,.4),0 8px 24px rgba(0,0,0,.5);display:none;animation:popIn .4s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;min-width:220px}
+#adWatchOverlay .aw-claim-btn:active{transform:scale(.93)}
+
+/* Bottom bar */
+#adWatchOverlay .aw-bottom{position:absolute;bottom:0;left:0;right:0;padding:12px 16px;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between}
+#adWatchOverlay .aw-bottom .aw-b-left{font-size:11px;color:rgba(255,255,255,.5)}
+#adWatchOverlay .aw-bottom .aw-b-right{font-size:11px;color:var(--pu);font-weight:700}
+
+/* Cancel button */
+#adWatchOverlay .aw-cancel{position:absolute;top:14px;left:16px;z-index:10002;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+#adWatchOverlay .aw-cancel:active{background:rgba(255,255,255,.2)}
+
+/* REWARD POP */
 .reward-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10010;background:linear-gradient(135deg,var(--p),var(--pl));border-radius:24px;padding:28px 36px;text-align:center;display:none;animation:popIn .4s ease;box-shadow:0 0 60px var(--pglow)}
 .reward-pop .rp-ico{font-size:48px;margin-bottom:10px}
 .reward-pop .rp-amt{font-size:36px;font-weight:900;color:#fff;margin-bottom:4px}
@@ -77,14 +93,10 @@
 .spin-ico{font-size:32px;animation:spinAnim 4s linear infinite}
 @keyframes spinAnim{to{transform:rotate(360deg)}}
 
-/* TASK MODAL ENHANCED */
+/* TASK MODAL */
 .tm-ad-note{background:rgba(124,58,237,.1);border:1px solid var(--br);border-radius:var(--r2);padding:11px 14px;font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.5}
 .tm-link-btn{display:flex;align-items:center;gap:8px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:var(--r2);padding:11px 14px;font-size:13px;font-weight:600;color:#60a5fa;text-decoration:none;margin-bottom:12px;transition:all .2s}
 .tm-link-btn:hover{background:rgba(59,130,246,.2)}
-
-/* NEW: Ad open in new tab button */
-.ad-open-btn{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);z-index:10004;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;backdrop-filter:blur(10px);display:none;pointer-events:auto}
-.ad-open-btn:active{transform:translateX(-50%) scale(.95)}
 </style>
 </head>
 <body>
@@ -210,43 +222,48 @@
   <div class="rp-lbl">Added to your balance!</div>
 </div>
 
-<!-- ══ AD FULLSCREEN VIEWER ══ -->
-<div id="adViewer">
-  <div id="adTopStrip">
-    <div class="as-left">📺 Watch to earn</div>
-    <div class="as-right">+৳<span id="avReward">1</span></div>
-  </div>
-  <iframe id="adFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" allowfullscreen></iframe>
+<!-- ════════════════════════════════════════════════════════
+     NEW: AD WATCH OVERLAY (NO IFRAME - OPENS IN NEW TAB)
+     ════════════════════════════════════════════════════════ -->
+<div id="adWatchOverlay">
+  <button class="aw-cancel" id="awCancel">✕</button>
 
-  <!-- AD LOADING SCREEN -->
-  <div id="adLoader">
-    <div class="ad-spinner"></div>
-    <div class="ad-loader-txt">Loading Ad...</div>
-    <div class="ad-loader-sub">Please wait, opening advertisement</div>
+  <div class="aw-top">
+    <div class="aw-left">📺 Watch to earn</div>
+    <div class="aw-right">+৳<span id="awReward">1</span></div>
   </div>
 
-  <!-- AD FALLBACK / NO URL -->
-  <div id="adNoUrl">
-    <div style="font-size:48px">📺</div>
-    <div style="font-size:16px;font-weight:700;color:var(--t1)">Ad is loading...</div>
-    <div style="font-size:13px;color:var(--t2);line-height:1.6">Please keep this screen open.<br>Your reward counts automatically after 15 seconds.</div>
-    <div style="font-size:30px;font-weight:900;color:var(--pu);margin-top:10px" id="noUrlCount">15</div>
+  <div class="aw-center">
+    <div class="aw-ico">📺</div>
+    <div class="aw-title" id="awTitle">Watch Ad & Earn</div>
+    <div class="aw-sub" id="awSub">Click the button below to open the ad.<br>Keep it open for 15 seconds, then come back to claim!</div>
+
+    <!-- Timer Ring -->
+    <div class="aw-timer-wrap" id="awTimerWrap">
+      <svg class="aw-timer-ring" width="140" height="140" viewBox="0 0 140 140">
+        <circle class="aw-timer-bg" cx="70" cy="70" r="60"/>
+        <circle class="aw-timer-fill" id="awTimerFill" cx="70" cy="70" r="60" stroke-dasharray="377" stroke-dashoffset="0"/>
+      </svg>
+      <div class="aw-timer-num" id="awTimerNum">15</div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="aw-progress">
+      <div class="aw-progress-fill" id="awProgressFill"></div>
+    </div>
+
+    <!-- Open Ad Button -->
+    <button class="aw-open-btn" id="awOpenBtn">🚀 Open Ad Now</button>
+    <div class="aw-opened-msg" id="awOpenedMsg">✅ Ad opened! Timer is running...</div>
+
+    <!-- Claim Button -->
+    <button class="aw-claim-btn" id="awClaimBtn">✅ Claim ৳<span id="awClaimAmt">1</span></button>
   </div>
 
-  <!-- Ring timer -->
-  <div id="adTimerOverlay">
-    <svg id="adRingSvg" width="70" height="70" viewBox="0 0 70 70">
-      <circle id="adRingBg" cx="35" cy="35" r="30"/>
-      <circle id="adRingFill" cx="35" cy="35" r="30" stroke-dasharray="188.5" stroke-dashoffset="0"/>
-    </svg>
-    <div id="adRingNum">15</div>
+  <div class="aw-bottom">
+    <div class="aw-b-left">Don't close this screen</div>
+    <div class="aw-b-right" id="awStatus">Waiting...</div>
   </div>
-  <!-- Bottom progress -->
-  <div id="adBottomBar">
-    <div id="adProgLine"><div id="adProgFill"></div></div>
-  </div>
-  <!-- CLAIM BUTTON -->
-  <button id="adClaimBtn">✅ Claim ৳<span id="claimAmt">1</span></button>
 </div>
 
 <!-- ══ TASK MODAL ══ -->
@@ -283,33 +300,32 @@ import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/f
 import { toast, copyText, refCode, openModal, getSettings } from './assets/js/app.js';
 
 const AD_DURATION = 15;
-const CIRC = 2 * Math.PI * 30;
+const CIRC = 2 * Math.PI * 60; // radius 60
 const MAX_ADS = 5;
-const AD_COUNT_PREFIX = 'ep_adcnt_';
 
 let uid = null;
 let userData = null;
 let cfg = {};
 let adTimer = null;
 let adDone = false;
+let adOpened = false;
 let pendingType = null;
 let currentTaskId = null;
 let currentReward = 0;
-let isClaiming = false; // prevent double claim
+let isClaiming = false;
+let adWindow = null;
+let currentAdUrl = null;
 
 window.showToastMsg = msg => toast(msg, 'info');
 
 // ════════════════════════════════════════════════════
-// AUTH STATE — FIXED: wait properly for all devices
+// AUTH
 // ════════════════════════════════════════════════════
-const _earnUnsub = onAuthStateChanged(auth, async user => {
-  if (!user) {
-    location.replace('login.html');
-    return;
-  }
+onAuthStateChanged(auth, async user => {
+  if (!user) { location.replace('login.html'); return; }
 
   uid = user.uid;
-  console.log('[Earn] User authenticated:', uid);
+  console.log('[Earn] User:', uid);
 
   try {
     const [usnap, settings] = await Promise.all([
@@ -317,34 +333,23 @@ const _earnUnsub = onAuthStateChanged(auth, async user => {
       getSettings(db)
     ]);
 
-    if (!usnap.exists()) {
-      toast('User data not found!', 'err');
-      location.replace('login.html');
-      return;
-    }
-
+    if (!usnap.exists()) { location.replace('login.html'); return; }
     userData = usnap.data();
-
-    if (userData.isBanned) {
-      location.replace('login.html');
-      return;
-    }
-
+    if (userData.isBanned) { location.replace('login.html'); return; }
     cfg = settings || {};
 
-    // Update UI
+    // UI
     document.getElementById('tbBal').textContent = parseFloat(userData.balance || 0).toFixed(2);
     document.getElementById('adRwdLbl').textContent = cfg.adReward || 1;
     document.getElementById('adMaxLbl').textContent = ((cfg.adReward || 1) * MAX_ADS).toFixed(0);
     document.getElementById('dailyLbl').textContent = cfg.dailyBonus || 2;
     document.getElementById('refBonusLbl').textContent = cfg.referralBonus || 5;
-    document.getElementById('avReward').textContent = cfg.adReward || 1;
-    document.getElementById('claimAmt').textContent = cfg.adReward || 1;
+    document.getElementById('awReward').textContent = cfg.adReward || 1;
+    document.getElementById('awClaimAmt').textContent = cfg.adReward || 1;
 
-    // Referral link
-    const rl = document.getElementById('refLink');
+    // Ref link
     const refUrl = location.origin + '/register.html?ref=' + (userData.referralCode || refCode(uid));
-    rl.value = refUrl;
+    document.getElementById('refLink').value = refUrl;
     document.getElementById('copyRefBtn').onclick = () => copyText(refUrl, document.getElementById('copyRefBtn'));
     document.getElementById('copyRefBtn2').onclick = () => copyText(refUrl, document.getElementById('copyRefBtn2'));
     document.getElementById('shareBtn').onclick = () => {
@@ -352,22 +357,20 @@ const _earnUnsub = onAuthStateChanged(auth, async user => {
       else copyText(refUrl, document.getElementById('shareBtn'));
     };
 
-    // Streak
     document.getElementById('streakCount').textContent = userData.streak || 0;
 
-    // Initialize
     initAdLimit();
     checkDailyBonus();
     loadTasks();
 
   } catch (err) {
     console.error('[Earn] Init error:', err);
-    toast('Failed to load. Please refresh.', 'err');
+    toast('Failed to load. Refresh.', 'err');
   }
 });
 
 // ════════════════════════════════════════════════════
-// AD LIMIT SYSTEM — FIXED: use Firestore instead of localStorage
+// AD LIMIT
 // ════════════════════════════════════════════════════
 async function getAdCountToday() {
   try {
@@ -376,36 +379,22 @@ async function getAdCountToday() {
     const data = snap.data();
     const today = new Date().toDateString();
     const lastAdDate = data.lastAdDate ? (data.lastAdDate.toDate ? data.lastAdDate.toDate().toDateString() : new Date(data.lastAdDate).toDateString()) : null;
-
     if (lastAdDate !== today) {
-      // Reset count for new day
       await updateDoc(doc(db, 'users', uid), { adsToday: 0, lastAdDate: serverTimestamp() });
       return 0;
     }
     return data.adsToday || 0;
   } catch (e) {
     console.error('[AdCount] Error:', e);
-    // Fallback to localStorage
-    const stored = localStorage.getItem(AD_COUNT_PREFIX + uid);
-    if (!stored) return 0;
-    try {
-      const obj = JSON.parse(stored);
-      if (obj.date !== new Date().toDateString()) return 0;
-      return obj.count || 0;
-    } catch { return 0; }
+    return 0;
   }
 }
 
 async function setAdCountToday(count) {
   try {
-    await updateDoc(doc(db, 'users', uid), {
-      adsToday: count,
-      lastAdDate: serverTimestamp()
-    });
+    await updateDoc(doc(db, 'users', uid), { adsToday: count, lastAdDate: serverTimestamp() });
   } catch (e) {
     console.error('[AdCount] Set error:', e);
-    // Fallback
-    localStorage.setItem(AD_COUNT_PREFIX + uid, JSON.stringify({ date: new Date().toDateString(), count }));
   }
 }
 
@@ -431,291 +420,259 @@ function renderAdChips(used) {
 }
 
 // ════════════════════════════════════════════════════
-// PICK AD URL — FIXED: better fallback handling
+// PICK AD URL
 // ════════════════════════════════════════════════════
 function pickAdUrl() {
   const urls = [
-    cfg.adsterraUrl,
-    cfg.monetagUrl,
-    cfg.smartlinkUrl,
-    cfg.adUrl1,
-    cfg.adUrl2,
-    cfg.adUrl3
+    cfg.adsterraUrl, cfg.monetagUrl, cfg.smartlinkUrl,
+    cfg.adUrl1, cfg.adUrl2, cfg.adUrl3
   ].filter(u => u && typeof u === 'string' && u.trim().startsWith('http'));
 
   if (!urls.length) {
-    console.warn('[Ad] No ad URLs configured');
-    return null;
+    // Default fallback URLs if none configured
+    const fallbacks = [
+      'https://google.com',
+      'https://youtube.com',
+      'https://facebook.com'
+    ];
+    return fallbacks[Math.floor(Math.random() * fallbacks.length)];
   }
   return urls[Math.floor(Math.random() * urls.length)];
 }
 
 // ════════════════════════════════════════════════════
-// OPEN AD — FIXED: instant open, no iframe blocking
+// NEW: OPEN AD IN NEW TAB (NO IFRAME)
 // ════════════════════════════════════════════════════
-function openAd(type, taskId, reward) {
+function openAdWatch(type, taskId, reward) {
   pendingType = type;
   currentTaskId = taskId || null;
   currentReward = parseFloat(reward) || (parseFloat(cfg.adReward) || 1);
   adDone = false;
+  adOpened = false;
   isClaiming = false;
+  currentAdUrl = pickAdUrl();
 
-  // Show viewer instantly
-  const viewer = document.getElementById('adViewer');
-  viewer.style.display = 'flex';
+  // Show overlay
+  const overlay = document.getElementById('adWatchOverlay');
+  overlay.style.display = 'flex';
 
   // Reset UI
-  document.getElementById('avReward').textContent = currentReward;
-  document.getElementById('claimAmt').textContent = currentReward;
-  document.getElementById('adClaimBtn').style.display = 'none';
-  document.getElementById('adProgFill').style.width = '0%';
-  document.getElementById('adRingFill').style.strokeDashoffset = '0';
-  document.getElementById('adRingNum').textContent = AD_DURATION;
-  document.getElementById('noUrlCount').textContent = AD_DURATION;
+  document.getElementById('awReward').textContent = currentReward;
+  document.getElementById('awClaimAmt').textContent = currentReward;
+  document.getElementById('awTimerNum').textContent = AD_DURATION;
+  document.getElementById('awTimerFill').style.strokeDashoffset = '0';
+  document.getElementById('awProgressFill').style.width = '0%';
+  document.getElementById('awOpenBtn').style.display = 'block';
+  document.getElementById('awOpenBtn').disabled = false;
+  document.getElementById('awOpenBtn').textContent = '🚀 Open Ad Now';
+  document.getElementById('awOpenedMsg').style.display = 'none';
+  document.getElementById('awClaimBtn').style.display = 'none';
+  document.getElementById('awStatus').textContent = 'Click "Open Ad Now"';
+  document.getElementById('awTitle').textContent = 'Watch Ad & Earn';
+  document.getElementById('awSub').innerHTML = 'Click the button below to open the ad.<br>Keep it open for 15 seconds, then come back to claim!';
 
-  const adUrl = pickAdUrl();
-  const frame = document.getElementById('adFrame');
-  const noUrl = document.getElementById('adNoUrl');
-  const loader = document.getElementById('adLoader');
-
-  // Clear previous
-  frame.src = 'about:blank';
-  frame.onload = null;
-  frame.onerror = null;
-
-  if (adUrl) {
-    loader.style.display = 'flex';
-    noUrl.style.display = 'none';
-    frame.style.display = 'block';
-
-    // FIX: Remove sandbox restrictions that block ads
-    frame.removeAttribute('sandbox');
-
-    // Load ad with minimal delay
-    setTimeout(() => {
-      frame.src = adUrl;
-    }, 100);
-
-    // Timeout: show fallback if ad doesn't load
-    const loadTimeout = setTimeout(() => {
-      if (!adDone) {
-        loader.style.display = 'none';
-        noUrl.style.display = 'flex';
-        frame.style.display = 'none';
-      }
-    }, 3000);
-
-    frame.onload = () => {
-      clearTimeout(loadTimeout);
-      loader.style.display = 'none';
-      noUrl.style.display = 'none';
-    };
-
-    frame.onerror = () => {
-      clearTimeout(loadTimeout);
-      loader.style.display = 'none';
-      noUrl.style.display = 'flex';
-      frame.style.display = 'none';
-    };
-
-  } else {
-    loader.style.display = 'none';
-    frame.style.display = 'none';
-    noUrl.style.display = 'flex';
-  }
-
-  // Start countdown immediately
+  // Start countdown immediately (runs even before clicking open)
   let rem = AD_DURATION;
   adTimer = setInterval(() => {
     rem--;
     const pct = (AD_DURATION - rem) / AD_DURATION;
-    document.getElementById('adProgFill').style.width = (pct * 100) + '%';
-    document.getElementById('adRingFill').style.strokeDashoffset = String(CIRC * (1 - pct));
-    document.getElementById('adRingNum').textContent = rem;
-    document.getElementById('noUrlCount').textContent = rem;
+    document.getElementById('awProgressFill').style.width = (pct * 100) + '%';
+    document.getElementById('awTimerFill').style.strokeDashoffset = String(CIRC * (1 - pct));
+    document.getElementById('awTimerNum').textContent = rem;
 
     if (rem <= 0) {
       clearInterval(adTimer);
       adTimer = null;
       adDone = true;
-      document.getElementById('adRingNum').textContent = '✓';
-      const claimBtn = document.getElementById('adClaimBtn');
-      claimBtn.style.display = 'block';
-      claimBtn.style.zIndex = '99999';
-      loader.style.display = 'none';
-      noUrl.style.display = 'none';
+      document.getElementById('awTimerNum').textContent = '✓';
+      document.getElementById('awStatus').textContent = 'Ready to claim!';
+      document.getElementById('awTitle').textContent = 'Ad Watched!';
+      document.getElementById('awSub').textContent = 'Great job! Click the Claim button below.';
+      document.getElementById('awOpenBtn').style.display = 'none';
+      document.getElementById('awClaimBtn').style.display = 'block';
     }
   }, 1000);
 }
 
-// ════════════════════════════════════════════════════
-// CLAIM HANDLER — FIXED: works on ALL devices
-// ════════════════════════════════════════════════════
-const claimBtn = document.getElementById('adClaimBtn');
+// Open Ad button - opens in new tab
+const awOpenBtn = document.getElementById('awOpenBtn');
+awOpenBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
 
-function handleClaim(e) {
-  if (e) {
-    e.preventDefault();
-    e.stopPropagation();
+  if (!currentAdUrl) {
+    toast('No ad URL available!', 'err');
+    return;
   }
 
-  // Prevent double claim
+  // Open ad in new tab
+  adWindow = window.open(currentAdUrl, '_blank');
+  adOpened = true;
+
+  // Update UI
+  awOpenBtn.disabled = true;
+  awOpenBtn.textContent = '✅ Ad Opened';
+  document.getElementById('awOpenedMsg').style.display = 'block';
+  document.getElementById('awStatus').textContent = 'Timer running...';
+
+  // Check if popup was blocked
+  if (!adWindow || adWindow.closed || typeof adWindow.closed === 'undefined') {
+    toast('Popup blocked! Please allow popups for this site.', 'warn');
+    awOpenBtn.disabled = false;
+    awOpenBtn.textContent = '🚀 Try Again';
+    document.getElementById('awOpenedMsg').style.display = 'none';
+  }
+});
+
+// Also handle touch for mobile
+awOpenBtn.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  awOpenBtn.style.transform = 'scale(0.95)';
+}, { passive: false });
+
+awOpenBtn.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  awOpenBtn.style.transform = 'scale(1)';
+  awOpenBtn.click();
+}, { passive: false });
+
+// ════════════════════════════════════════════════════
+// CLAIM HANDLER - WORKS ON ALL DEVICES
+// ════════════════════════════════════════════════════
+const awClaimBtn = document.getElementById('awClaimBtn');
+
+function handleClaim(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
   if (!adDone || isClaiming) return;
   isClaiming = true;
 
-  // Visual feedback
-  claimBtn.style.opacity = '0.6';
-  claimBtn.textContent = '⏳ Processing...';
+  awClaimBtn.style.opacity = '0.6';
+  awClaimBtn.textContent = '⏳ Processing...';
 
   giveReward()
     .then(() => {
-      closeAd();
+      closeAdWatch();
       showRewardPop(currentReward);
     })
     .catch(err => {
       console.error('Claim error:', err);
       isClaiming = false;
-      claimBtn.style.opacity = '1';
-      claimBtn.textContent = '✅ Claim ৳' + currentReward;
-      toast('Claim failed: ' + (err.message || 'Please try again'), 'err');
+      awClaimBtn.style.opacity = '1';
+      awClaimBtn.textContent = '✅ Claim ৳' + currentReward;
+      toast('Claim failed: ' + (err.message || 'Try again'), 'err');
     });
 }
 
-// Multiple event listeners for maximum compatibility
-claimBtn.addEventListener('click', handleClaim);
-
-// Touch events with proper handling
-claimBtn.addEventListener('touchstart', (e) => {
+awClaimBtn.addEventListener('click', handleClaim);
+awClaimBtn.addEventListener('touchstart', (e) => {
   e.preventDefault();
-  claimBtn.style.transform = 'translateX(-50%) scale(0.93)';
+  awClaimBtn.style.transform = 'scale(0.93)';
 }, { passive: false });
-
-claimBtn.addEventListener('touchend', (e) => {
+awClaimBtn.addEventListener('touchend', (e) => {
   e.preventDefault();
   e.stopPropagation();
-  claimBtn.style.transform = 'translateX(-50%) scale(1)';
+  awClaimBtn.style.transform = 'scale(1)';
   handleClaim(null);
 }, { passive: false });
-
-claimBtn.addEventListener('touchcancel', () => {
-  claimBtn.style.transform = 'translateX(-50%) scale(1)';
+awClaimBtn.addEventListener('touchcancel', () => {
+  awClaimBtn.style.transform = 'scale(1)';
 });
 
 // ════════════════════════════════════════════════════
-// GIVE REWARD — FIXED: robust Firestore update
+// GIVE REWARD
 // ════════════════════════════════════════════════════
 async function giveReward() {
-  if (!uid) {
-    throw new Error('Not authenticated');
-  }
+  if (!uid) throw new Error('Not authenticated');
 
   const r = currentReward;
   const userRef = doc(db, 'users', uid);
 
-  try {
-    if (pendingType === 'ad') {
-      // Get fresh data first
-      const freshSnap = await getDoc(userRef);
-      if (!freshSnap.exists()) {
-        throw new Error('User not found');
-      }
+  if (pendingType === 'ad') {
+    const freshSnap = await getDoc(userRef);
+    if (!freshSnap.exists()) throw new Error('User not found');
 
-      const fresh = freshSnap.data();
-      const today = new Date().toDateString();
-      const lastAdDate = fresh.lastAdDate ?
-        (fresh.lastAdDate.toDate ? fresh.lastAdDate.toDate().toDateString() : new Date(fresh.lastAdDate).toDateString())
-        : null;
+    const fresh = freshSnap.data();
+    const today = new Date().toDateString();
+    const lastAdDate = fresh.lastAdDate ?
+      (fresh.lastAdDate.toDate ? fresh.lastAdDate.toDate().toDateString() : new Date(fresh.lastAdDate).toDateString())
+      : null;
 
-      let currentAdCount = fresh.adsToday || 0;
-      if (lastAdDate !== today) {
-        currentAdCount = 0;
-      }
+    let currentAdCount = fresh.adsToday || 0;
+    if (lastAdDate !== today) currentAdCount = 0;
+    if (currentAdCount >= MAX_ADS) throw new Error('Daily limit reached');
 
-      if (currentAdCount >= MAX_ADS) {
-        throw new Error('Daily limit reached');
-      }
+    const newCount = currentAdCount + 1;
 
-      const newCount = currentAdCount + 1;
+    await updateDoc(userRef, {
+      balance: increment(r),
+      totalEarned: increment(r),
+      adsWatched: increment(1),
+      adsToday: newCount,
+      lastAdDate: serverTimestamp()
+    });
 
-      // Update Firestore
-      await updateDoc(userRef, {
-        balance: increment(r),
-        totalEarned: increment(r),
-        adsWatched: increment(1),
-        adsToday: newCount,
-        lastAdDate: serverTimestamp()
-      });
+    userData.balance = (userData.balance || 0) + r;
+    document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
 
-      // Update local state
-      userData.balance = (userData.balance || 0) + r;
-      document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
+    const remaining = Math.max(0, MAX_ADS - newCount);
+    document.getElementById('adRemain').textContent = remaining;
+    renderAdChips(newCount);
 
-      const remaining = Math.max(0, MAX_ADS - newCount);
-      document.getElementById('adRemain').textContent = remaining;
-      renderAdChips(newCount);
-
-      if (remaining <= 0) {
-        document.getElementById('adBtn').disabled = true;
-        document.getElementById('adStatus').textContent = '⏳ Daily limit reached. Come back tomorrow!';
-      }
-
-      toast(`+৳${r} Ad reward! 📺`, 'ok');
-
-    } else if (pendingType === 'task' && currentTaskId) {
-      const freshSnap = await getDoc(userRef);
-      const fresh = freshSnap.data();
-
-      if ((fresh.claimedTasks || []).includes(currentTaskId)) {
-        throw new Error('Already claimed!');
-      }
-
-      await updateDoc(userRef, {
-        balance: increment(r),
-        totalEarned: increment(r),
-        claimedTasks: arrayUnion(currentTaskId)
-      });
-
-      userData.balance = (userData.balance || 0) + r;
-      userData.claimedTasks = [...(userData.claimedTasks || []), currentTaskId];
-      document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
-
-      toast(`+৳${r} Task reward! ✅`, 'ok');
-      loadTasks();
+    if (remaining <= 0) {
+      document.getElementById('adBtn').disabled = true;
+      document.getElementById('adStatus').textContent = '⏳ Daily limit reached. Come back tomorrow!';
     }
 
-  } catch (err) {
-    console.error('[GiveReward] Error:', err);
-    isClaiming = false;
-    throw err;
+    toast(`+৳${r} Ad reward! 📺`, 'ok');
+
+  } else if (pendingType === 'task' && currentTaskId) {
+    const freshSnap = await getDoc(userRef);
+    const fresh = freshSnap.data();
+    if ((fresh.claimedTasks || []).includes(currentTaskId)) {
+      throw new Error('Already claimed!');
+    }
+
+    await updateDoc(userRef, {
+      balance: increment(r),
+      totalEarned: increment(r),
+      claimedTasks: arrayUnion(currentTaskId)
+    });
+
+    userData.balance = (userData.balance || 0) + r;
+    userData.claimedTasks = [...(userData.claimedTasks || []), currentTaskId];
+    document.getElementById('tbBal').textContent = parseFloat(userData.balance).toFixed(2);
+
+    toast(`+৳${r} Task reward! ✅`, 'ok');
+    loadTasks();
   }
 }
 
-function closeAd() {
+function closeAdWatch() {
   clearInterval(adTimer);
   adTimer = null;
   isClaiming = false;
+  adOpened = false;
+  adDone = false;
 
-  const frame = document.getElementById('adFrame');
-  frame.src = 'about:blank';
-  frame.onload = null;
-  frame.onerror = null;
-
-  const viewer = document.getElementById('adViewer');
-  viewer.style.display = 'none';
-
-  document.getElementById('adLoader').style.display = 'none';
-  document.getElementById('adNoUrl').style.display = 'none';
+  document.getElementById('adWatchOverlay').style.display = 'none';
   document.getElementById('taskModal').classList.remove('open');
 
   // Reset claim button
-  const claimBtn = document.getElementById('adClaimBtn');
-  claimBtn.style.display = 'none';
-  claimBtn.style.opacity = '1';
-  claimBtn.textContent = '✅ Claim ৳' + (cfg.adReward || 1);
-
-  adDone = false;
-  pendingType = null;
+  awClaimBtn.style.display = 'none';
+  awClaimBtn.style.opacity = '1';
+  awClaimBtn.textContent = '✅ Claim ৳' + (cfg.adReward || 1);
 }
+
+// Cancel button
+document.getElementById('awCancel').addEventListener('click', () => {
+  if (!adDone) {
+    clearInterval(adTimer);
+    adTimer = null;
+    toast('❌ Ad cancelled — no reward', 'err');
+  }
+  closeAdWatch();
+});
 
 function showRewardPop(amt) {
   const pop = document.getElementById('rewardPop');
@@ -730,14 +687,14 @@ function showRewardPop(amt) {
 document.getElementById('adBtn').addEventListener('click', async () => {
   const used = await getAdCountToday();
   if (used >= MAX_ADS) {
-    toast('Daily ad limit reached! Come back tomorrow.', 'warn');
+    toast('Daily ad limit reached!', 'warn');
     return;
   }
-  openAd('ad', null, cfg.adReward || 1);
+  openAdWatch('ad', null, cfg.adReward || 1);
 });
 
 // ════════════════════════════════════════════════════
-// DAILY BONUS — FIXED
+// DAILY BONUS
 // ════════════════════════════════════════════════════
 function checkDailyBonus() {
   const today = new Date().toDateString();
@@ -757,10 +714,7 @@ document.getElementById('dailyBtn').addEventListener('click', async () => {
   const lc = fresh.dailyBonusClaimed;
   const done = lc && (lc.toDate ? lc.toDate().toDateString() : new Date(lc.seconds * 1000).toDateString()) === today;
 
-  if (done) {
-    toast('Already claimed!', 'warn');
-    return;
-  }
+  if (done) { toast('Already claimed!', 'warn'); return; }
 
   const bonus = cfg.dailyBonus || 2;
   await updateDoc(doc(db, 'users', uid), {
@@ -821,8 +775,7 @@ async function loadTasks() {
       `;
 
       if (!done) {
-        const btn = card.querySelector('button');
-        btn.addEventListener('click', () => {
+        card.querySelector('button').addEventListener('click', () => {
           window._openTask(tid, t.name, t.reward, t.icon, t.description, t.link);
         });
       }
@@ -857,19 +810,19 @@ window._openTask = (id, name, reward, icon, desc, link) => {
 
 document.getElementById('tmStart').addEventListener('click', () => {
   document.getElementById('taskModal').classList.remove('open');
-  openAd('task', currentTaskId, currentReward);
+  openAdWatch('task', currentTaskId, currentReward);
 });
 
 // ════════════════════════════════════════════════════
-// BACK BUTTON HANDLING
+// BACK BUTTON
 // ════════════════════════════════════════════════════
 history.pushState(null, '', location.href);
 window.addEventListener('popstate', () => {
-  if (document.getElementById('adViewer').style.display !== 'none') {
+  if (document.getElementById('adWatchOverlay').style.display !== 'none') {
     if (!adDone) {
       clearInterval(adTimer);
       adTimer = null;
-      closeAd();
+      closeAdWatch();
       toast('❌ Ad cancelled — no reward', 'err');
     }
     history.pushState(null, '', location.href);
